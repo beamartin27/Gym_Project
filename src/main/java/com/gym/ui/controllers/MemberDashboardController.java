@@ -41,12 +41,7 @@ public class MemberDashboardController {
 
     @FXML
     private void onMyBookingsClicked() {
-        // For now, just a TODO popup
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("My bookings");
-        alert.setHeaderText(null);
-        alert.setContentText("My bookings screen not implemented yet.");
-        alert.showAndWait();
+        SceneManager.switchTo("/views/my-bookings.fxml", "My bookings");
     }
 
     @FXML
