@@ -3,10 +3,9 @@ package com.gym.ui.controllers;
 import com.gym.AppConfig;
 import com.gym.domain.User;
 import com.gym.service.AuthService;
-import com.gym.utils.SceneManager;
 import com.gym.ui.utils.SessionManager;
+import com.gym.utils.SceneManager;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 
 public class AdminDashboardController {
@@ -17,38 +16,32 @@ public class AdminDashboardController {
     private final AuthService authService = AppConfig.getAuthService();
 
     @FXML
-    private void initialize() {
-        // Show who is logged in
-        User current = authService.getCurrentUser();
+    public void initialize() {
+        User current = SessionManager.getCurrentUser();
         if (current != null) {
-            welcomeLabel.setText("Admin: " + current.getUsername());
-        } else {
-            welcomeLabel.setText("Admin dashboard");
+            welcomeLabel.setText("Admin dashboard - " + current.getUsername());
         }
     }
 
     @FXML
     private void onManageClassesClicked() {
-        showTodo("Manage classes");
-        // Later: SceneManager.switchTo("/views/admin-classes.fxml", "Manage classes");
+        SceneManager.switchTo("/views/admin-classes.fxml", "Manage classes");
     }
 
     @FXML
     private void onManageSchedulesClicked() {
-        showTodo("Manage schedules");
-        // Later: SceneManager.switchTo("/views/admin-schedules.fxml", "Manage schedules");
+        SceneManager.switchTo("/views/admin-schedules.fxml", "Manage schedules");
     }
 
     @FXML
     private void onViewBookingsClicked() {
-        showTodo("View all bookings");
-        // Later: SceneManager.switchTo("/views/admin-bookings.fxml", "All bookings");
+        SceneManager.switchTo("/views/admin-bookings.fxml", "All bookings");
     }
 
     @FXML
     private void onViewMembersClicked() {
-        showTodo("View members");
-        // Later: SceneManager.switchTo("/views/admin-members.fxml", "Members");
+        // We will use this to MANAGE users (members + trainers)
+        SceneManager.switchTo("/views/admin-users.fxml", "Manage users");
     }
 
     @FXML
@@ -56,13 +49,5 @@ public class AdminDashboardController {
         authService.logout();
         SessionManager.clear();
         SceneManager.switchTo("/views/login.fxml", "Gym Login");
-    }
-
-    private void showTodo(String featureName) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Not implemented");
-        alert.setHeaderText(null);
-        alert.setContentText(featureName + " screen is not implemented yet.");
-        alert.showAndWait();
     }
 }
