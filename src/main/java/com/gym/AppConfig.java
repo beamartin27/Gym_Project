@@ -35,4 +35,7 @@ public class AppConfig {
     public static BookingService getBookingService() { return bookingService; }
     public static ProgressService getProgressService() { return progressService; }
     public static UserRepository getUserRepository() { return userRepository; }
+    public static BookingRepository getBookingRepository() { return bookingRepository; }
+    public static ClassRepository getClassRepository() { return classRepository; }
+
 }

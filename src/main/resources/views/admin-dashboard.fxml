@@ -35,7 +35,7 @@
                     prefWidth="200"
                     onAction="#onViewBookingsClicked"/>
 
-            <Button text="View members"
+            <Button text="Manage users"
                     prefWidth="200"
                     onAction="#onViewMembersClicked"/>
         </VBox>
