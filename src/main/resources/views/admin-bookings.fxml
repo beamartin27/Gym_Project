@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ComboBox?>
 
 <BorderPane xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
@@ -17,15 +25,36 @@
     </top>
 
     <center>
-        <TableView fx:id="bookingsTable" prefHeight="400" prefWidth="800">
-            <columns>
-                <TableColumn fx:id="idColumn" text="Booking ID" prefWidth="90"/>
-                <TableColumn fx:id="userIdColumn" text="User ID" prefWidth="80"/>
-                <TableColumn fx:id="scheduleIdColumn" text="Schedule ID" prefWidth="90"/>
-                <TableColumn fx:id="bookingDateColumn" text="Booking date" prefWidth="200"/>
-                <TableColumn fx:id="statusColumn" text="Status" prefWidth="100"/>
-            </columns>
-        </TableView>
+        <VBox spacing="10" style="-fx-padding: 10;">
+
+            <!-- Search / filter row -->
+            <HBox spacing="10">
+                <TextField fx:id="searchField"
+                           promptText="Search by member, class or booking ID..."/>
+                <Label text="Status:"/>
+                <ComboBox fx:id="statusFilter" prefWidth="130"/>
+                <Button text="Search" onAction="#onSearchClicked"/>
+                <Button text="Clear" onAction="#onClearSearchClicked"/>
+            </HBox>
+
+            <!-- Bookings table -->
+            <TableView fx:id="bookingsTable" prefHeight="400" prefWidth="900">
+                <columns>
+                    <TableColumn fx:id="bookingIdColumn" text="ID" prefWidth="60"/>
+                    <TableColumn fx:id="memberColumn" text="Member" prefWidth="140"/>
+                    <TableColumn fx:id="classColumn" text="Class" prefWidth="200"/>
+                    <TableColumn fx:id="dateColumn" text="Date" prefWidth="100"/>
+                    <TableColumn fx:id="timeColumn" text="Time" prefWidth="140"/>
+                    <TableColumn fx:id="bookingDateColumn" text="Booked at" prefWidth="170"/>
+                    <TableColumn fx:id="statusColumn" text="Status" prefWidth="90"/>
+                </columns>
+            </TableView>
+
+            <!-- Actions -->
+            <HBox spacing="10" alignment="CENTER_RIGHT">
+                <Button text="Cancel selected booking" onAction="#onCancelBookingClicked"/>
+            </HBox>
+        </VBox>
     </center>
 
 </BorderPane>

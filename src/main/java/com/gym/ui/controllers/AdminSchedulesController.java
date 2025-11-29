@@ -46,7 +46,7 @@ public class AdminSchedulesController {
     @FXML
     private TableColumn<ClassSchedule, Number> spotsColumn;
 
-    // Form to create schedule
+    // Create schedule form
     @FXML
     private ComboBox<GymClass> classComboBox;
 
@@ -103,22 +103,27 @@ public class AdminSchedulesController {
             }
         });
 
-        // When admin selects a class, show its capacity
+        // When admin selects a class, show its capacity AND recompute end time
         classComboBox.getSelectionModel().selectedItemProperty().addListener((obs, old, selected) -> {
             if (selected != null) {
                 capacityLabel.setText("Capacity / initial spots: " + selected.getCapacity());
             } else {
                 capacityLabel.setText("Capacity / initial spots: -");
             }
+            autoUpdateEndTime();
         });
+
+        // When start time changes, recompute end time based on class duration
+        startTimeField.textProperty().addListener((obs, oldText, newText) -> autoUpdateEndTime());
 
         // Default date = today
         LocalDate today = LocalDate.now();
         dateFilterPicker.setValue(today);
         scheduleDatePicker.setValue(today);
 
-        // Table columns
-        idColumn.setCellValueFactory(cd -> new SimpleIntegerProperty(cd.getValue().getScheduleId()));
+        // Table column bindings
+        idColumn.setCellValueFactory(cd ->
+                new SimpleIntegerProperty(cd.getValue().getScheduleId()));
 
         classColumn.setCellValueFactory(cd -> {
             ClassSchedule s = cd.getValue();
@@ -163,6 +168,34 @@ public class AdminSchedulesController {
         }
     }
 
+    /**
+     * Automatically recompute the end time field from the selected class duration
+     * and the start time text field. If the class or start time is invalid, the
+     * end time field is cleared.
+     */
+    private void autoUpdateEndTime() {
+        GymClass selected = classComboBox.getValue();
+        if (selected == null) {
+            endTimeField.clear();
+            return;
+        }
+
+        String startText = startTimeField.getText();
+        if (startText == null || startText.trim().isEmpty()) {
+            endTimeField.clear();
+            return;
+        }
+
+        try {
+            LocalTime start = LocalTime.parse(startText.trim(), timeFmt);
+            LocalTime end = start.plusMinutes(selected.getDurationMinutes());
+            endTimeField.setText(end.format(timeFmt));
+        } catch (DateTimeParseException e) {
+            // invalid format; leave end time empty until fixed
+            endTimeField.clear();
+        }
+    }
+
     @FXML
     private void onAddScheduleClicked() {
         GymClass selectedClass = classComboBox.getValue();
@@ -170,23 +203,45 @@ public class AdminSchedulesController {
         String startText = startTimeField.getText().trim();
         String endText = endTimeField.getText().trim();
 
-        if (selectedClass == null || date == null ||
-                startText.isEmpty() || endText.isEmpty()) {
+        if (selectedClass == null || date == null || startText.isEmpty()) {
             showAlert("Validation error",
-                    "Class, date, start time and end time are required.");
+                    "Class, date and start time are required.");
             return;
         }
 
         LocalTime start;
-        LocalTime end;
         try {
             start = LocalTime.parse(startText, timeFmt);
-            end = LocalTime.parse(endText, timeFmt);
         } catch (DateTimeParseException e) {
             showAlert("Validation error",
                     "Times must be in HH:mm format, e.g. 09:00");
             return;
         }
+
+        // Expected end time based on class duration
+        LocalTime expectedEnd = start.plusMinutes(selectedClass.getDurationMinutes());
+
+        // If there is a value in endTimeField and it doesn't match, show error
+        if (!endText.isEmpty()) {
+            try {
+                LocalTime parsedEnd = LocalTime.parse(endText, timeFmt);
+                if (!parsedEnd.equals(expectedEnd)) {
+                    showAlert(
+                            "Validation error",
+                            "End time must be " + expectedEnd.format(timeFmt)
+                                    + " (" + selectedClass.getDurationMinutes()
+                                    + " minutes after start) for this class."
+                    );
+                    return;
+                }
+            } catch (DateTimeParseException e) {
+                showAlert("Validation error",
+                        "Times must be in HH:mm format, e.g. 09:00");
+                return;
+            }
+        }
+
+        LocalTime end = expectedEnd;
 
         if (!end.isAfter(start)) {
             showAlert("Validation error", "End time must be after start time.");

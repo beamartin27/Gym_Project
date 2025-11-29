@@ -67,7 +67,9 @@
                                 <Label text="End time (HH:mm):" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
                                 <TextField fx:id="endTimeField"
                                            promptText="10:00"
+                                           editable="false"
                                            GridPane.rowIndex="2" GridPane.columnIndex="3"/>
+
 
                                 <Label fx:id="capacityLabel"
                                        text="Capacity / initial spots: -"

@@ -90,14 +90,23 @@ public class AdminUsersController {
         String email = emailField.getText().trim();
         String role = roleComboBox.getValue();
 
+        // Basic required fields
         if (username.isEmpty() || password.isEmpty() || email.isEmpty() || role == null) {
             showAlert("Validation error", "Username, password, email and role are required.");
             return;
         }
 
+        // 🔴 NEW: password length validation (so we don't rely only on console)
+        if (password.length() < 6) {
+            showAlert("Validation error", "Password must be at least 6 characters long.");
+            return;
+        }
+
         boolean ok = authService.register(username, password, email, role);
         if (!ok) {
-            showAlert("Error", "Could not create user. Check console (maybe username/email already used).");
+            // There can be other reasons (duplicate username/email, etc.)
+            showAlert("Error", "Could not create user. " +
+                    "Check that the username and email are not already in use and that the data is valid.");
             return;
         }
 
