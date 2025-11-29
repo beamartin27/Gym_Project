@@ -109,7 +109,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <mainClass>com.gym.gym_project.HelloApplication</mainClass>
+                    <mainClass>com.gym.AppMain</mainClass>
                 </configuration>
             </plugin>
         </plugins>
