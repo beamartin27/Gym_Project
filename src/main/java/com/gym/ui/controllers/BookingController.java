@@ -6,7 +6,6 @@ import com.gym.domain.User;
 import com.gym.service.BookingService;
 import com.gym.service.ClassService;
 import com.gym.ui.utils.SessionManager;
-import com.gym.utils.SceneManager;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -136,10 +135,4 @@ public class BookingController {
             messageLabel.setText("Could not book this class.");
         }
     }
-
-    @FXML
-    private void onBackClicked() {
-        SceneManager.switchTo("/views/member-dashboard.fxml", "Member dashboard");
-    }
-
 }
