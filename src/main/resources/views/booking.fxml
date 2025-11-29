@@ -11,6 +11,7 @@
     <!-- Top: title + date picker -->
     <top>
         <HBox spacing="15" style="-fx-padding: 10 10 0 10;">
+            <Button text="← Back" onAction="#onBackClicked"/>
             <Label text="Book your next class"
                    style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
             <Pane HBox.hgrow="ALWAYS"/>

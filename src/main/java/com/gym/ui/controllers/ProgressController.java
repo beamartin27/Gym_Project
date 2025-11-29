@@ -27,7 +27,7 @@ public class ProgressController {
     private ProgressService progressService;
 
     private final DateTimeFormatter DATE_FORMATTER =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     @FXML
     private void initialize() {

@@ -16,13 +16,27 @@ public class LoginController {
     @FXML private PasswordField passwordField;
     @FXML private Label errorLabel;
 
-    private final AuthService authService = AppConfig.getAuthService();
+    private AuthService authService;
+
+    @FXML
+    private void initialize() {
+        // This gets executed once FXML loads
+        this.authService = AppConfig.getAuthService();
+        if (this.authService == null) {
+            System.err.println("ERROR: AuthService is null. Did AppMain call AppConfig.init()?");
+        }
+    }
 
     @FXML
     private void onLoginClicked() {
         String username = usernameField.getText();
         String password = passwordField.getText();
         errorLabel.setText("");
+
+        if (authService == null) {
+            errorLabel.setText("Internal error: auth not ready");
+            return;
+        }
 
         User logged = authService.login(username, password);
         if (logged == null) {
