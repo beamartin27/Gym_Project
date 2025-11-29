@@ -25,6 +25,7 @@ public class LoginController {
         if (this.authService == null) {
             System.err.println("ERROR: AuthService is null. Did AppMain call AppConfig.init()?");
         }
+        passwordField.setOnAction(e -> onLoginClicked());
     }
 
     @FXML
@@ -50,6 +51,8 @@ public class LoginController {
 
         if ("ADMIN".equalsIgnoreCase(role)) {
             SceneManager.switchTo("/views/admin-dashboard.fxml", "Admin dashboard");
+        } else if ("TRAINER".equalsIgnoreCase(role)) {
+            SceneManager.switchTo("/views/trainer-dashboard.fxml", "Trainer dashboard");
         } else {
             SceneManager.switchTo("/views/member-dashboard.fxml", "Member dashboard");
         }

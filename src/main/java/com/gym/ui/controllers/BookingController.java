@@ -3,6 +3,7 @@ package com.gym.ui.controllers;
 import com.gym.AppConfig;
 import com.gym.domain.ClassSchedule;
 import com.gym.domain.User;
+import com.gym.domain.GymClass;
 import com.gym.service.BookingService;
 import com.gym.service.ClassService;
 import com.gym.ui.utils.SessionManager;
@@ -61,8 +62,17 @@ public class BookingController {
             return new SimpleStringProperty(text);
         });
 
-        classIdColumn.setCellValueFactory(cd ->
-                new SimpleStringProperty(String.valueOf(cd.getValue().getClassId())));
+        // Column: class name instead of ID
+        classIdColumn.setText("Class");   // change header text
+
+        classIdColumn.setCellValueFactory(cd -> {
+            ClassSchedule s = cd.getValue();
+            GymClass gymClass = classService.getClassById(s.getClassId());
+            String name = (gymClass != null)
+                    ? gymClass.getClassName()
+                    : "Class #" + s.getClassId();
+            return new SimpleStringProperty(name);
+        });
 
         dateColumn.setCellValueFactory(cd ->
                 new SimpleStringProperty(cd.getValue().getScheduledDate().format(dateFmt)));
@@ -95,7 +105,6 @@ public class BookingController {
     }
 
     private void loadSchedulesForSelectedDate() {
-        messageLabel.setText("");
         LocalDate selectedDate = datePicker.getValue();
         if (selectedDate == null) {
             selectedDate = LocalDate.now();
