@@ -16,6 +16,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class BookingController {
 
@@ -59,8 +62,9 @@ public class BookingController {
 
     private ClassSchedule selectedSchedule;
 
-    /** all schedules for the selected date, before search filter */
+    /* all schedules for the selected date, before search filter */
     private List<ClassSchedule> allSchedulesForDate = List.of();
+    private final Map<Integer, GymClass> classCache = new HashMap<>();
 
     @FXML
     private void initialize() {
@@ -86,7 +90,6 @@ public class BookingController {
         datePicker.setValue(today);
         datePicker.valueProperty().addListener((obs, oldV, newV) -> loadSchedulesForSelectedDate());
 
-        // table columns
         timeColumn.setCellValueFactory(cd -> {
             ClassSchedule s = cd.getValue();
             String time = TIME_FORMATTER.format(s.getStartTime()) + " - " +
@@ -96,7 +99,9 @@ public class BookingController {
 
         classNameColumn.setCellValueFactory(cd -> {
             ClassSchedule s = cd.getValue();
-            GymClass gymClass = classService.getClassById(s.getClassId());
+            GymClass gymClass = classCache.computeIfAbsent(
+                    s.getClassId(), id -> classService.getClassById(id)
+            );
             String name = (gymClass != null)
                     ? gymClass.getClassName()
                     : "Class #" + s.getClassId();
@@ -105,7 +110,9 @@ public class BookingController {
 
         instructorColumn.setCellValueFactory(cd -> {
             ClassSchedule s = cd.getValue();
-            GymClass gymClass = classService.getClassById(s.getClassId());
+            GymClass gymClass = classCache.computeIfAbsent(
+                    s.getClassId(), id -> classService.getClassById(id)
+            );
             String instructor = (gymClass != null && gymClass.getInstructorName() != null)
                     ? gymClass.getInstructorName()
                     : "—";
@@ -114,7 +121,9 @@ public class BookingController {
 
         focusColumn.setCellValueFactory(cd -> {
             ClassSchedule s = cd.getValue();
-            GymClass gymClass = classService.getClassById(s.getClassId());
+            GymClass gymClass = classCache.computeIfAbsent(
+                    s.getClassId(), id -> classService.getClassById(id)
+            );
             String focus = (gymClass != null && gymClass.getClassType() != null)
                     ? focusEmoji(gymClass.getClassType()) + " " + gymClass.getClassType()
                     : "—";
@@ -160,25 +169,26 @@ public class BookingController {
 
     private void loadSchedulesForSelectedDate() {
         LocalDate today = LocalDate.now();
-        LocalDate selectedDate = datePicker.getValue();
+        LocalDate maxDate = today.plusDays(14);
 
+        LocalDate selectedDate = datePicker.getValue();
         List<ClassSchedule> schedules;
 
         if (selectedDate == null) {
-            // No specific date selected → show all available classes in the next 14 days
-            LocalDate max = today.plusDays(14);
-
             schedules = classService.getAvailableSchedules().stream()
                     .filter(s -> {
                         LocalDate d = s.getScheduledDate();
-                        return !d.isBefore(today) && !d.isAfter(max);
+                        return !d.isBefore(today) && !d.isAfter(maxDate);
                     })
                     .toList();
 
             selectionLabel.setText("Showing classes for the next 14 days");
         } else {
-            // Specific date selected → show only that date
-            schedules = classService.getSchedulesByDate(selectedDate);
+            if (!selectedDate.isBefore(today) && !selectedDate.isAfter(maxDate)) {
+                schedules = classService.getSchedulesByDate(selectedDate);
+            } else {
+                schedules = List.of();
+            }
 
             if (schedules.isEmpty()) {
                 selectionLabel.setText("No classes on " + selectedDate.format(DATE_FORMATTER));
@@ -187,8 +197,11 @@ public class BookingController {
             }
         }
 
+        allSchedulesForDate = schedules;
         scheduleTable.setItems(FXCollections.observableArrayList(schedules));
+        applySearchFilter();
     }
+
 
     /** Re-applies text filter over allSchedulesForDate to update the table. */
     private void applySearchFilter() {
@@ -226,7 +239,9 @@ public class BookingController {
     }
 
     private String formatSchedule(ClassSchedule s) {
-        GymClass gymClass = classService.getClassById(s.getClassId());
+        GymClass gymClass = classCache.computeIfAbsent(
+                s.getClassId(), id -> classService.getClassById(id)
+        );
         String name = (gymClass != null) ? gymClass.getClassName() : "Class #" + s.getClassId();
         return name + " on " + DATE_FORMATTER.format(s.getScheduledDate()) +
                 " at " + TIME_FORMATTER.format(s.getStartTime());
