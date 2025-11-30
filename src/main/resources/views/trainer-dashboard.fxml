@@ -37,6 +37,7 @@
         <HBox spacing="10" style="-fx-padding: 10;">
             <Label fx:id="infoLabel" text=""/>
             <Pane HBox.hgrow="ALWAYS"/>
+            <Button text="View bookings" onAction="#onViewBookingsClicked"/>
             <Button text="Mark attendance" onAction="#onMarkAttendanceClicked"/>
         </HBox>
     </bottom>

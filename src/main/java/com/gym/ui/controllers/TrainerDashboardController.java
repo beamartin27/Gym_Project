@@ -141,7 +141,16 @@ public class TrainerDashboardController {
     ) { }
 
     @FXML
+    private void onViewBookingsClicked() {
+        openAttendanceWindow(false);  // solo ver
+    }
+
+    @FXML
     private void onMarkAttendanceClicked() {
+        openAttendanceWindow(true);   // modo marcar asistencia
+    }
+
+    private void openAttendanceWindow(boolean awardMode) {
         ScheduleRow selected = scheduleTable.getSelectionModel().getSelectedItem();
         if (selected == null) {
             infoLabel.setText("Select a class first.");
@@ -157,11 +166,12 @@ public class TrainerDashboardController {
             controller.setContext(
                     selected.scheduleId(),
                     selected.className(),
-                    selected.classType()
+                    selected.classType(),
+                    awardMode
             );
 
             Stage stage = new Stage();
-            stage.setTitle("Attendance - " + selected.className());
+            stage.setTitle((awardMode ? "Attendance - " : "Bookings - ") + selected.className());
             stage.setScene(new Scene(root));
             stage.initOwner(scheduleTable.getScene().getWindow());
             stage.show();
@@ -169,8 +179,7 @@ public class TrainerDashboardController {
             infoLabel.setText("");
         } catch (Exception e) {
             e.printStackTrace();
-            infoLabel.setText("Could not open attendance window.");
+            infoLabel.setText("Could not open attendance/bookings window.");
         }
     }
-
 }

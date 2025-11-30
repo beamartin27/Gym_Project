@@ -29,7 +29,7 @@
         <HBox spacing="10" style="-fx-padding: 10;">
             <Label fx:id="messageLabel" text=""/>
             <Pane HBox.hgrow="ALWAYS"/>
-            <Button text="Save &amp; award points" onAction="#onSaveClicked"/>
+            <Button fx:id="saveButton" text="Save &amp; award points" onAction="#onSaveClicked"/>
             <Button text="Close" onAction="#onCloseClicked"/>
         </HBox>
     </bottom>

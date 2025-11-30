@@ -25,6 +25,9 @@ public class TrainerAttendanceController {
     private Label headerLabel;
 
     @FXML
+    private Button saveButton;
+
+    @FXML
     private TableView<AttendanceRow> attendanceTable;
     @FXML
     private TableColumn<AttendanceRow, String> memberColumn;
@@ -43,6 +46,7 @@ public class TrainerAttendanceController {
     private int scheduleId;
     private String className;
     private String classType;
+    private boolean awardMode = true;
 
     @FXML
     private void initialize() {
@@ -68,11 +72,31 @@ public class TrainerAttendanceController {
 
     /** Called from TrainerDashboardController after FXML is loaded */
     public void setContext(int scheduleId, String className, String classType) {
+        setContext(scheduleId, className, classType, true);
+    }
+
+    public void setContext(int scheduleId, String className, String classType, boolean awardMode) {
         this.scheduleId = scheduleId;
         this.className = className;
         this.classType = classType;
+        this.awardMode = awardMode;
 
-        headerLabel.setText("Attendance – " + className);
+        if (awardMode) {
+            headerLabel.setText("Attendance – " + className);
+            attendanceTable.setEditable(true);
+            attendedColumn.setVisible(true);
+            saveButton.setDisable(false);
+            saveButton.setVisible(true);
+            messageLabel.setText("");
+        } else {
+            headerLabel.setText("Bookings – " + className);
+            attendanceTable.setEditable(false);
+            attendedColumn.setVisible(false);   // <- hide column
+            saveButton.setDisable(true);
+            saveButton.setVisible(false);       // <- hide button
+            messageLabel.setText("View only – attendance cannot be edited.");
+        }
+
         loadBookings();
     }
 
@@ -105,6 +129,10 @@ public class TrainerAttendanceController {
 
     @FXML
     private void onSaveClicked() {
+        if (!awardMode) {
+            return; // in view mode do nothing
+        }
+
         int awarded = 0;
 
         for (AttendanceRow row : attendanceTable.getItems()) {
