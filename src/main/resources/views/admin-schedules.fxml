@@ -23,7 +23,9 @@
             <HBox spacing="10">
                 <Label text="Show schedules for date:"/>
                 <DatePicker fx:id="dateFilterPicker" onAction="#onFilterDateChanged"/>
+                <Button text="Clear" onAction="#onClearDateFilterClicked"/>
             </HBox>
+
 
             <!-- Schedules table -->
             <TableView fx:id="schedulesTable" prefHeight="250" prefWidth="800">

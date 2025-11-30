@@ -28,6 +28,9 @@ public class AppConfig {
         classService = new ClassServiceImpl(classRepository);
         bookingService = new BookingServiceImpl(bookingRepository, classRepository);
         progressService = new ProgressServiceImpl(progressRepository);
+
+        DemoDataSeeder.seed();
+
     }
 
     public static AuthService getAuthService() { return authService; }

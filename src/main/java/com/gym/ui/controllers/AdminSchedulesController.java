@@ -152,7 +152,7 @@ public class AdminSchedulesController {
                 new SimpleIntegerProperty(cd.getValue().getAvailableSpots()));
 
         // Load schedules for today
-        loadSchedulesForDate(today);
+        loadAllSchedules();
     }
 
     private void loadSchedulesForDate(LocalDate date) {
@@ -160,10 +160,24 @@ public class AdminSchedulesController {
         schedulesTable.setItems(FXCollections.observableArrayList(schedules));
     }
 
+    private void loadAllSchedules() {
+        List<ClassSchedule> schedules = AppConfig.getClassRepository().findAllSchedules();
+        schedulesTable.setItems(FXCollections.observableArrayList(schedules));
+    }
+
+    @FXML
+    private void onClearDateFilterClicked() {
+        dateFilterPicker.setValue(null);
+        loadAllSchedules();
+    }
+
+
     @FXML
     private void onFilterDateChanged() {
         LocalDate date = dateFilterPicker.getValue();
-        if (date != null) {
+        if (date == null) {
+            loadAllSchedules();
+        } else {
             loadSchedulesForDate(date);
         }
     }
@@ -308,7 +322,7 @@ public class AdminSchedulesController {
             return;
         }
 
-        loadSchedulesForDate(dateFilterPicker.getValue());
+        loadAllSchedules();
     }
 
     @FXML

@@ -123,17 +123,33 @@ public class ClassServiceImpl implements ClassService {
     }
     @Override
     public List<ClassSchedule> getAvailableSchedules() {
+        LocalDate today = LocalDate.now();
+        LocalDate maxDate = today.plusDays(14);
+
         return classRepository.findAllSchedules().stream()
                 .filter(s -> s.getAvailableSpots() > 0)
-                .filter(s -> !s.getScheduledDate().isBefore(LocalDate.now()))
+                .filter(s -> {
+                    LocalDate d = s.getScheduledDate();
+                    return !d.isBefore(today) && !d.isAfter(maxDate);
+                })
                 .collect(Collectors.toList());
     }
+
     @Override
     public List<ClassSchedule> getSchedulesByDate(LocalDate date) {
+        LocalDate today = LocalDate.now();
+        LocalDate maxDate = today.plusDays(14);
+
+        // reject invalid dates early
+        if (date.isBefore(today) || date.isAfter(maxDate)) {
+            return List.of();
+        }
+
         return classRepository.findAllSchedules().stream()
                 .filter(s -> s.getScheduledDate().equals(date))
                 .collect(Collectors.toList());
     }
+
     @Override
     public boolean updateSchedule(ClassSchedule schedule) {
         if (schedule.getScheduleId() <= 0) {

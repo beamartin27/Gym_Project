@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+
+<VBox spacing="12" alignment="CENTER"
+      xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.gym.ui.controllers.RegisterController"
+      style="-fx-padding: 30;">
+
+    <children>
+        <Label text="Create Your Account"
+               style="-fx-font-size: 20; -fx-font-weight: bold;"/>
+
+        <TextField fx:id="usernameField" promptText="Username" prefWidth="220"/>
+        <TextField fx:id="emailField" promptText="Email" prefWidth="220"/>
+        <PasswordField fx:id="passwordField" promptText="Password" prefWidth="220"/>
+        <PasswordField fx:id="confirmPasswordField" promptText="Confirm password" prefWidth="220"/>
+
+        <Label fx:id="errorLabel" textFill="red"/>
+
+        <Button text="Register" onAction="#onRegisterClicked" prefWidth="220"/>
+        <Button text="Back to Login" onAction="#onBackClicked" prefWidth="220"/>
+    </children>
+
+</VBox>

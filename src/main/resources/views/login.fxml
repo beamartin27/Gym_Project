@@ -3,17 +3,25 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.*?>
 
-<VBox spacing="10" alignment="CENTER"
-      xmlns="http://javafx.com/javafx/8"
+<VBox spacing="12" alignment="CENTER"
+      xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.gym.ui.controllers.LoginController">
+      fx:controller="com.gym.ui.controllers.LoginController"
+      style="-fx-padding: 30;">
 
     <children>
-        <Label text="Gym Login"/>
-        <TextField fx:id="usernameField" promptText="Username"/>
-        <PasswordField fx:id="passwordField" promptText="Password"/>
+        <Label text="Gym Login" style="-fx-font-size: 20; -fx-font-weight: bold;"/>
+
+        <TextField fx:id="usernameField" promptText="Username" prefWidth="200"/>
+        <PasswordField fx:id="passwordField" promptText="Password" prefWidth="200"/>
+
         <Label fx:id="errorLabel" textFill="red"/>
-        <Button text="Login" onAction="#onLoginClicked" defaultButton="true"/>
+
+        <!-- LOGIN BUTTON -->
+        <Button text="Login" onAction="#onLoginClicked" defaultButton="true" prefWidth="200"/>
+
+        <!-- REGISTER BUTTON -->
+        <Button text="Register" onAction="#onRegisterClicked" prefWidth="200"/>
     </children>
 
 </VBox>

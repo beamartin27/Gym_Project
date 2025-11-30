@@ -29,6 +29,11 @@ public class LoginController {
     }
 
     @FXML
+    private void onRegisterClicked() {
+        SceneManager.switchTo("/views/register.fxml", "Register");
+    }
+
+    @FXML
     private void onLoginClicked() {
         String username = usernameField.getText();
         String password = passwordField.getText();
