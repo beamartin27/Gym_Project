@@ -52,7 +52,7 @@
         <center>
             <VBox alignment="TOP_CENTER"
                   spacing="18"
-                  style="-fx-padding: 0 40 24 40;">
+                  style="-fx-padding: 0 40 60 40;">
 
                 <Label text="Manage schedules"
                        style="-fx-text-fill: white;
