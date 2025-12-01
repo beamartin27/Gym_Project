@@ -2,43 +2,104 @@
 
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.paint.Color?>
 
-<BorderPane xmlns="http://javafx.com/javafx/21"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.gym.ui.controllers.TrainerDashboardController">
+<StackPane xmlns="http://javafx.com/javafx/21"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.gym.ui.controllers.TrainerDashboardController"
+           styleClass="app-root"
+           prefWidth="1400"
+           prefHeight="800">
 
-    <top>
-        <HBox spacing="15" style="-fx-padding: 10 10 0 10;">
-            <Label fx:id="welcomeLabel"
-                   text="Trainer dashboard"
-                   style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
-            <Pane HBox.hgrow="ALWAYS"/>
-            <Button text="Logout" onAction="#onLogoutClicked"/>
-        </HBox>
-    </top>
+    <!-- 1) IMAGEN DE FONDO -->
+    <ImageView fitWidth="1400"
+               fitHeight="800"
+               preserveRatio="false"
+               smooth="true"
+               pickOnBounds="true">
+        <image>
+            <!-- CAMBIA la ruta a la que tú uses -->
+            <Image url="@../images/trainer-dashboard.jpg"/>
+        </image>
+    </ImageView>
 
-    <center>
-        <VBox spacing="10" style="-fx-padding: 10;">
-            <Label text="Upcoming classes"
-                   style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
-            <TableView fx:id="scheduleTable" prefHeight="350">
-                <columns>
-                    <TableColumn fx:id="dateColumn" text="Date" prefWidth="100"/>
-                    <TableColumn fx:id="timeColumn" text="Time" prefWidth="140"/>
-                    <TableColumn fx:id="classColumn" text="Class" prefWidth="200"/>
-                    <TableColumn fx:id="bookedColumn" text="Booked" prefWidth="80"/>
-                    <TableColumn fx:id="capacityColumn" text="Capacity" prefWidth="80"/>
-                </columns>
-            </TableView>
-        </VBox>
-    </center>
+    <!-- 2) CAPA OSCURA -->
+    <Rectangle width="1400" height="800" opacity="0.78">
+        <fill>
+            <Color fx:constant="BLACK"/>
+        </fill>
+    </Rectangle>
 
-    <bottom>
-        <HBox spacing="10" style="-fx-padding: 10;">
-            <Label fx:id="infoLabel" text=""/>
-            <Pane HBox.hgrow="ALWAYS"/>
-            <Button text="View bookings" onAction="#onViewBookingsClicked"/>
-            <Button text="Mark attendance" onAction="#onMarkAttendanceClicked"/>
-        </HBox>
-    </bottom>
-</BorderPane>
+    <!-- 3) CONTENIDO -->
+    <BorderPane prefWidth="1400" prefHeight="800">
+
+        <!-- TOP: welcome centrado + logout a la derecha -->
+        <top>
+            <StackPane style="-fx-padding: 20 20 0 20;">
+                <children>
+                    <Button text="Logout"
+                            onAction="#onLogoutClicked"
+                            styleClass="secondary-btn"
+                            StackPane.alignment="TOP_RIGHT"/>
+                </children>
+            </StackPane>
+        </top>
+
+        <!-- CENTER: título + tabla centrada con estilo booking-table -->
+        <center>
+            <VBox alignment="TOP_CENTER"
+                  spacing="16"
+                  style="-fx-padding: 80 40 10 40;">
+
+                <Label fx:id="welcomeLabel"
+                       text="Trainer dashboard"
+                       style="-fx-text-fill: white;
+                                  -fx-font-size: 28px;
+                                  -fx-font-weight: bold;
+                                  -fx-padding: 10 0 0 0;
+                                  -fx-font-family: 'Impact','Arial Black';"/>
+
+                <Label text="Upcoming classes"
+                       style="-fx-text-fill: #f5f5f5;
+                              -fx-font-size: 16px;
+                              -fx-font-weight: bold;"/>
+
+                <StackPane maxWidth="900" maxHeight="360">
+                    <TableView fx:id="scheduleTable"
+                               styleClass="booking-table"
+                               prefHeight="360"
+                               prefWidth="900">
+                        <columns>
+                            <TableColumn fx:id="dateColumn" text="Date" prefWidth="160"/>
+                            <TableColumn fx:id="timeColumn" text="Time" prefWidth="160"/>
+                            <TableColumn fx:id="classColumn" text="Class" prefWidth="280"/>
+                            <TableColumn fx:id="bookedColumn" text="Booked" prefWidth="140"/>
+                            <TableColumn fx:id="capacityColumn" text="Capacity" prefWidth="160"/>
+                        </columns>
+                    </TableView>
+                </StackPane>
+
+                <!-- Mensajes debajo de la tabla -->
+                <Label fx:id="infoLabel"
+                       style="-fx-text-fill: #ff6666;"/>
+
+                <HBox alignment="BOTTOM_CENTER"
+                      spacing="16"
+                      style="-fx-padding: 0 0 100 0;">
+                    <children>
+                        <Button text="View bookings"
+                                onAction="#onViewBookingsClicked"
+                                styleClass="primary-btn"/>
+
+                        <Button text="Mark attendance"
+                                onAction="#onMarkAttendanceClicked"
+                                styleClass="primary-btn"/>
+                    </children>
+                </HBox>
+            </VBox>
+        </center>
+    </BorderPane>
+</StackPane>

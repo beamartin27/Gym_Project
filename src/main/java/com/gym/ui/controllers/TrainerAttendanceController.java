@@ -12,14 +12,30 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class TrainerAttendanceController {
+
+    @FXML
+    private StackPane rootPane;
+
+    @FXML
+    private ImageView bgImage;
+
+    @FXML
+    private Rectangle overlay;
 
     @FXML
     private Label headerLabel;
@@ -68,6 +84,20 @@ public class TrainerAttendanceController {
         attendedColumn.setCellFactory(
                 CheckBoxTableCell.forTableColumn(attendedColumn)
         );
+
+        // === fondo responsive ===
+        bgImage.fitWidthProperty().bind(rootPane.widthProperty());
+        bgImage.fitHeightProperty().bind(rootPane.heightProperty());
+        overlay.widthProperty().bind(rootPane.widthProperty());
+        overlay.heightProperty().bind(rootPane.heightProperty());
+
+        memberColumn.setCellValueFactory(c -> c.getValue().memberNameProperty());
+        statusColumn.setCellValueFactory(c -> c.getValue().statusProperty());
+
+        attendanceTable.setEditable(true);
+        attendedColumn.setEditable(true);
+        attendedColumn.setCellValueFactory(c -> c.getValue().attendedProperty());
+        attendedColumn.setCellFactory(CheckBoxTableCell.forTableColumn(attendedColumn));
     }
 
     /** Called from TrainerDashboardController after FXML is loaded */
@@ -85,15 +115,21 @@ public class TrainerAttendanceController {
             headerLabel.setText("Attendance – " + className);
             attendanceTable.setEditable(true);
             attendedColumn.setVisible(true);
+
             saveButton.setDisable(false);
             saveButton.setVisible(true);
+            saveButton.setManaged(true);   // <<--- AÑADIDO
+
             messageLabel.setText("");
         } else {
             headerLabel.setText("Bookings – " + className);
             attendanceTable.setEditable(false);
-            attendedColumn.setVisible(false);   // <- hide column
+            attendedColumn.setVisible(false);
+
             saveButton.setDisable(true);
-            saveButton.setVisible(false);       // <- hide button
+            saveButton.setVisible(false);
+            saveButton.setManaged(false);  // <<--- AÑADIDO
+
             messageLabel.setText("View only – attendance cannot be edited.");
         }
 
