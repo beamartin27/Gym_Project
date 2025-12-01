@@ -2,8 +2,10 @@
 
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.shape.Rectangle?>
-<?import javafx.geometry.Insets?>
+<?import javafx.scene.paint.Color?>
 
 <StackPane xmlns="http://javafx.com/javafx/21"
            xmlns:fx="http://javafx.com/fxml/1"
@@ -12,103 +14,112 @@
            prefWidth="1400"
            prefHeight="800">
 
-    <children>
-        <BorderPane prefWidth="1400" prefHeight="800">
-            <padding>
-                <Insets top="20" right="20" bottom="20" left="20"/>
-            </padding>
+    <!-- 1) BACKGROUND IMAGE -->
+    <ImageView fitWidth="1400"
+               fitHeight="800"
+               preserveRatio="false"
+               smooth="true"
+               pickOnBounds="true">
+        <image>
+            <Image url="@../images/admin.jpg"/>
+        </image>
+    </ImageView>
 
-            <!-- TOP: title + filters + back button -->
-            <top>
-                <VBox spacing="15">
-                    <Label text="All bookings"
-                           style="-fx-font-size: 32px; -fx-text-fill: white; -fx-font-weight: bold;"
-                           BorderPane.alignment="CENTER"/>
+    <!-- 2) DARK OVERLAY -->
+    <Rectangle width="1400" height="800" opacity="0.50">
+        <fill>
+            <Color fx:constant="BLACK"/>
+        </fill>
+    </Rectangle>
 
-                    <StackPane>
-                        <children>
-                            <Rectangle height="52"
-                                       arcWidth="26"
-                                       arcHeight="26"
-                                       fill="#CCFF00"
-                                       opacity="0.9"
-                                       StackPane.alignment="CENTER"/>
+    <!-- 3) MAIN CONTENT -->
+    <BorderPane prefWidth="1400" prefHeight="800">
 
-                            <HBox spacing="10" alignment="CENTER_LEFT">
-                                <padding>
-                                    <Insets top="0" right="15" bottom="0" left="15"/>
-                                </padding>
+        <!-- TOP: back button -->
+        <top>
+            <StackPane style="-fx-padding: 20 20 0 20;">
+                <children>
+                    <Button text="Back to dashboard"
+                            onAction="#onBackClicked"
+                            styleClass="secondary-btn"
+                            StackPane.alignment="TOP_RIGHT"/>
+                </children>
+            </StackPane>
+        </top>
 
-                                <!-- Search field -->
-                                <TextField fx:id="searchField"
-                                           promptText="Search by member, class or booking ID..."
-                                           prefWidth="350"/>
+        <!-- CENTER: title + filters + table + action button -->
+        <center>
+            <VBox alignment="TOP_CENTER"
+                  spacing="18"
+                  style="-fx-padding: 40 40 40 40;">
 
-                                <!-- Status filter -->
-                                <Label text="Status:" style="-fx-font-weight: bold;"/>
-                                <ComboBox fx:id="statusFilter"
-                                          prefWidth="140"/>
+                <!-- TITLE -->
+                <Label text="All bookings"
+                       style="-fx-text-fill: white;
+                              -fx-font-size: 32px;
+                              -fx-font-weight: bold;
+                              -fx-font-family: 'Impact','Arial Black';"/>
 
-                                <!-- Buttons -->
-                                <Button text="Search"
-                                        onAction="#onSearchClicked"
-                                        style="-fx-font-weight: bold;"/>
-                                <Button text="Clear"
-                                        onAction="#onClearSearchClicked"/>
-
-                                <Pane HBox.hgrow="ALWAYS"/>
-
-                                <Button text="Back to dashboard"
-                                        onAction="#onBackClicked"/>
-                            </HBox>
-                        </children>
-                    </StackPane>
-                </VBox>
-            </top>
-
-            <!-- CENTER: table + cancel button -->
-            <center>
-                <StackPane>
-                    <StackPane.margin>
-                        <Insets top="20" right="0" bottom="0" left="0"/>
-                    </StackPane.margin>
-
+                <!-- FILTERS ROW -->
+                <HBox alignment="CENTER"
+                      spacing="12"
+                      maxWidth="1000">
                     <children>
-                        <Rectangle height="42"
-                                   arcWidth="24"
-                                   arcHeight="24"
-                                   fill="#CCFF00"
-                                   opacity="0.9"
-                                   StackPane.alignment="TOP_CENTER"/>
+                        <TextField fx:id="searchField"
+                                   promptText="Search by member, class or booking ID..."
+                                   styleClass="search-field-dark"
+                                   prefWidth="420"
+                                   prefHeight="36"/>
 
-                        <VBox spacing="10">
-                            <TableView fx:id="bookingsTable"
-                                       prefHeight="520"
-                                       prefWidth="1100">
-                                <columns>
-                                    <TableColumn fx:id="bookingIdColumn" text="ID" prefWidth="60"/>
-                                    <TableColumn fx:id="memberColumn" text="Member" prefWidth="130"/>
-                                    <TableColumn fx:id="classColumn" text="Class" prefWidth="150"/>
-                                    <TableColumn fx:id="dateColumn" text="Date" prefWidth="120"/>
-                                    <TableColumn fx:id="timeColumn" text="Time" prefWidth="120"/>
-                                    <TableColumn fx:id="bookingDateColumn" text="Booked at" prefWidth="220"/>
-                                    <TableColumn fx:id="statusColumn" text="Status" prefWidth="100"/>
-                                </columns>
-                            </TableView>
+                        <Label text="Status:"
+                               style="-fx-text-fill: #f5f5f5; -fx-font-size: 13px;"/>
 
-                            <HBox alignment="CENTER_RIGHT">
-                                <padding>
-                                    <Insets top="10" right="0" bottom="0" left="0"/>
-                                </padding>
-                                <Button text="Cancel selected booking"
-                                        onAction="#onCancelBookingClicked"
-                                        style="-fx-font-weight: bold;"/>
-                            </HBox>
-                        </VBox>
+                        <ComboBox fx:id="statusFilter"
+                                  prefWidth="160"
+                                  styleClass="status-combo-dark"/>
+
+                        <Button text="Search"
+                                onAction="#onSearchClicked"
+                                styleClass="primary-btn"/>
+
+                        <Button text="Clear"
+                                onAction="#onClearSearchClicked"
+                                styleClass="secondary-btn"/>
                     </children>
-                </StackPane>
-            </center>
+                </HBox>
 
-        </BorderPane>
-    </children>
+                <!-- BOOKINGS TABLE -->
+                <StackPane maxWidth="1100" maxHeight="480">
+                    <TableView fx:id="bookingsTable"
+                               prefHeight="480"
+                               prefWidth="1100"
+                               styleClass="booking-table">
+                        <columns>
+                            <TableColumn fx:id="bookingIdColumn" text="ID" prefWidth="60"/>
+                            <TableColumn fx:id="memberColumn" text="Member" prefWidth="130"/>
+                            <TableColumn fx:id="classColumn" text="Class" prefWidth="160"/>
+                            <TableColumn fx:id="dateColumn" text="Date" prefWidth="120"/>
+                            <TableColumn fx:id="timeColumn" text="Time" prefWidth="120"/>
+                            <TableColumn fx:id="bookingDateColumn" text="Booked at" prefWidth="230"/>
+                            <TableColumn fx:id="statusColumn" text="Status" prefWidth="120"/>
+                        </columns>
+                    </TableView>
+                </StackPane>
+
+                <!-- ACTION BUTTON -->
+                <HBox alignment="CENTER_RIGHT"
+                      spacing="16"
+                      maxWidth="1100"
+                      style="-fx-padding: 6 0 0 0;">
+                    <children>
+                        <Button text="Cancel selected booking"
+                                onAction="#onCancelBookingClicked"
+                                styleClass="primary-btn"/>
+                    </children>
+                </HBox>
+
+            </VBox>
+        </center>
+
+    </BorderPane>
 </StackPane>
