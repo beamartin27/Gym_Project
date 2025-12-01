@@ -170,9 +170,19 @@ public class TrainerDashboardController {
                     awardMode
             );
 
+            // --- A PARTIR DE AQUÍ ES LO QUE CAMBIA ---
+            Scene scene = new Scene(root);
+
+            // Usa EXACTAMENTE la misma ruta de CSS que en SceneManager.switchTo(...)
+            // Si allí pone "/styles/app.css", aquí igual.
+            scene.getStylesheets().add(
+                    getClass().getResource("/styles/application.css").toExternalForm()
+            );
+            // ----------------------------------------
+
             Stage stage = new Stage();
             stage.setTitle((awardMode ? "Attendance - " : "Bookings - ") + selected.className());
-            stage.setScene(new Scene(root));
+            stage.setScene(scene);
             stage.initOwner(scheduleTable.getScene().getWindow());
             stage.show();
 
