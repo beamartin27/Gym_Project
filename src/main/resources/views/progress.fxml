@@ -2,66 +2,213 @@
 
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.paint.Color?>
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.gym.ui.controllers.ProgressController">
+            fx:controller="com.gym.ui.controllers.ProgressController"
+            styleClass="app-root"
+            prefWidth="1400"
+            prefHeight="800">
 
+    <!-- TOP BAR: back a la izquierda, título centrado -->
     <top>
-        <HBox spacing="16" style="-fx-padding: 16;">
-            <Button text="← Back" onAction="#onBackClicked"/>
-            <Label text="Your Progress"
-                   style="-fx-font-size: 20; -fx-font-weight: bold;"/>
-        </HBox>
+        <StackPane style="-fx-padding: 12 20 0 20;">
+            <children>
+                <Button text="← Back"
+                        onAction="#onBackClicked"
+                        styleClass="secondary-btn"
+                        StackPane.alignment="CENTER_LEFT"/>
+
+                <Label text="Your Progress"
+                       StackPane.alignment="CENTER"
+                       style="-fx-text-fill: white;
+                              -fx-font-size: 32px;
+                              -fx-font-weight: bold;
+                              -fx-padding: 40 0 0 0;
+                              -fx-font-family: 'Impact', 'Arial Black';"/>
+            </children>
+        </StackPane>
     </top>
 
+
+    <!-- CENTER CONTENT -->
     <center>
-        <VBox spacing="20" style="-fx-padding: 0 16 16 16;">
+        <VBox alignment="TOP_CENTER"
+              spacing="40"
+              style="-fx-padding: 40 40 24 40;">
 
-            <!-- PROGRESS BARS SECTION -->
-            <TitledPane text="Progress Overview" expanded="true">
-                <VBox spacing="12" style="-fx-padding: 10;">
-                    <HBox spacing="10">
-                        <Label text="Upper Body:"/>
-                        <ProgressBar fx:id="upperBar" prefWidth="300"/>
-                    </HBox>
+            <!-- 4 IMAGE CARDS + PROGRESS BARS -->
+            <HBox alignment="CENTER"
+                  spacing="22">
 
-                    <HBox spacing="10">
-                        <Label text="Lower Body:"/>
-                        <ProgressBar fx:id="lowerBar" prefWidth="300"/>
-                    </HBox>
+                <!-- UPPER BODY -->
+                <VBox alignment="CENTER" spacing="12">
+                    <StackPane styleClass="progress-card">
+                        <!-- PLACEHOLDER: cambia la ruta cuando tengas la imagen real -->
+                        <ImageView fitWidth="260"
+                                   fitHeight="150"
+                                   preserveRatio="false"
+                                   smooth="true">
+                            <image>
+                                <Image url="@../images/progress-upper.jpg"/>
+                            </image>
+                            <clip>
+                                <Rectangle width="260" height="150"
+                                           arcWidth="32" arcHeight="32"/>
+                            </clip>
+                        </ImageView>
 
-                    <HBox spacing="10">
-                        <Label text="Arms:"/>
-                        <ProgressBar fx:id="armsBar" prefWidth="300"/>
-                    </HBox>
+                        <!-- capa oscura encima para que se lea el texto -->
+                        <Rectangle width="260" height="150"
+                                   arcWidth="32" arcHeight="32"
+                                   opacity="0.35">
+                            <fill>
+                                <Color fx:constant="BLACK"/>
+                            </fill>
+                        </Rectangle>
 
-                    <HBox spacing="10">
-                        <Label text="Cardio:"/>
-                        <ProgressBar fx:id="cardioBar" prefWidth="300"/>
-                    </HBox>
+                        <Label text="Upper body"
+                               styleClass="progress-card-title"/>
+                    </StackPane>
+
+                    <ProgressBar fx:id="upperBar"
+                                 prefWidth="260"
+                                 styleClass="progress-bar-neon"/>
                 </VBox>
-            </TitledPane>
 
-            <!-- RECENT COMPLETED CLASSES -->
-            <TitledPane text="Recently Completed Classes" expanded="true">
-                <TableView fx:id="recentTable" prefHeight="220">
-                    <columns>
-                        <TableColumn fx:id="recentClassColumn" text="Class" prefWidth="180"/>
-                        <TableColumn fx:id="recentDateColumn" text="Date" prefWidth="100"/>
-                        <TableColumn fx:id="recentFocusColumn" text="Focus" prefWidth="120"/>
-                        <TableColumn fx:id="recentPointsColumn" text="Points" prefWidth="80"/>
-                    </columns>
-                </TableView>
-            </TitledPane>
+                <!-- LOWER BODY -->
+                <VBox alignment="CENTER" spacing="12">
+                    <StackPane styleClass="progress-card">
+                        <ImageView fitWidth="260"
+                                   fitHeight="150"
+                                   preserveRatio="false"
+                                   smooth="true">
+                            <image>
+                                <Image url="@../images/progress-lower.jpg"/>
+                            </image>
+                            <clip>
+                                <Rectangle width="260" height="150"
+                                           arcWidth="32" arcHeight="32"/>
+                            </clip>
+                        </ImageView>
+                        <Rectangle width="260" height="150"
+                                   arcWidth="32" arcHeight="32"
+                                   opacity="0.35">
+                            <fill>
+                                <Color fx:constant="BLACK"/>
+                            </fill>
+                        </Rectangle>
+                        <Label text="Lower body"
+                               styleClass="progress-card-title"/>
+                    </StackPane>
+
+                    <ProgressBar fx:id="lowerBar"
+                                 prefWidth="260"
+                                 styleClass="progress-bar-neon"/>
+                </VBox>
+
+                <!-- ARMS -->
+                <VBox alignment="CENTER" spacing="12">
+                    <StackPane styleClass="progress-card">
+                        <ImageView fitWidth="260"
+                                   fitHeight="150"
+                                   preserveRatio="false"
+                                   smooth="true">
+                            <image>
+                                <Image url="@../images/progress-arms.jpg"/>
+                            </image>
+                            <clip>
+                                <Rectangle width="260" height="150"
+                                           arcWidth="32" arcHeight="32"/>
+                            </clip>
+                        </ImageView>
+                        <Rectangle width="260" height="150"
+                                   arcWidth="32" arcHeight="32"
+                                   opacity="0.35">
+                            <fill>
+                                <Color fx:constant="BLACK"/>
+                            </fill>
+                        </Rectangle>
+                        <Label text="Arms"
+                               styleClass="progress-card-title"/>
+                    </StackPane>
+
+                    <ProgressBar fx:id="armsBar"
+                                 prefWidth="260"
+                                 styleClass="progress-bar-neon"/>
+                </VBox>
+
+                <!-- CARDIO -->
+                <VBox alignment="CENTER" spacing="12">
+                    <StackPane styleClass="progress-card">
+                        <ImageView fitWidth="260"
+                                   fitHeight="150"
+                                   preserveRatio="false"
+                                   smooth="true">
+                            <image>
+                                <Image url="@../images/progress-cardio.jpg"/>
+                            </image>
+                            <clip>
+                                <Rectangle width="260" height="150"
+                                           arcWidth="32" arcHeight="32"/>
+                            </clip>
+                        </ImageView>
+                        <Rectangle width="260" height="150"
+                                   arcWidth="32" arcHeight="32"
+                                   opacity="0.35">
+                            <fill>
+                                <Color fx:constant="BLACK"/>
+                            </fill>
+                        </Rectangle>
+                        <Label text="Cardio"
+                               styleClass="progress-card-title"/>
+                    </StackPane>
+
+                    <ProgressBar fx:id="cardioBar"
+                                 prefWidth="260"
+                                 styleClass="progress-bar-neon"/>
+                </VBox>
+            </HBox>
+
+            <!-- LABEL + TABLE JUNTOS PARA REDUCIR ESPACIO ENTRE ELLOS -->
+            <VBox alignment="TOP_CENTER" spacing="10">
+                <Label text="RECENTLY COMPLETED CLASSES"
+                       style="-fx-text-fill: #f5f5f5;
+                              -fx-font-size: 14px;
+                              -fx-padding: 20 0 0 0;
+                              -fx-font-weight: bold;"/>
+
+                <StackPane maxWidth="900" maxHeight="260">
+                    <TableView fx:id="recentTable"
+                               styleClass="booking-table"
+                               prefHeight="260"
+                               prefWidth="900">
+                        <columns>
+                            <TableColumn fx:id="recentClassColumn" text="Class"   prefWidth="350"/>
+                            <TableColumn fx:id="recentDateColumn"  text="Date"    prefWidth="160"/>
+                            <TableColumn fx:id="recentFocusColumn" text="Focus"   prefWidth="220"/>
+                            <TableColumn fx:id="recentPointsColumn" text="Points" prefWidth="170"/>
+                        </columns>
+                    </TableView>
+                </StackPane>
+            </VBox>
 
         </VBox>
     </center>
 
+    <!-- BOTTOM MESSAGE -->
     <bottom>
-        <HBox spacing="16" style="-fx-padding: 16;">
-            <Label fx:id="messageLabel" textFill="red"/>
+        <HBox alignment="CENTER_LEFT"
+              spacing="16"
+              style="-fx-padding: 12 20 20 20;">
+            <children>
+                <Label fx:id="messageLabel"
+                       style="-fx-text-fill: #ff6666;"/>
+            </children>
         </HBox>
     </bottom>
 

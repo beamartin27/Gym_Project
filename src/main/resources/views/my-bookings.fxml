@@ -2,42 +2,107 @@
 
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.paint.Color?>
 
-<BorderPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.gym.ui.controllers.MyBookingsController">
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.gym.ui.controllers.MyBookingsController"
+           styleClass="app-root"
+           prefWidth="1400"
+           prefHeight="800">
 
-    <top>
-        <VBox spacing="8" style="-fx-padding: 16;">
-            <HBox spacing="16" alignment="CENTER_LEFT">
-                <Button text="← Back" onAction="#onBackClicked"/>
-                <Label text="My bookings"
-                       style="-fx-font-size: 20; -fx-font-weight: bold;"/>
+    <!-- 1) IMAGEN DE FONDO -->
+    <ImageView fitWidth="1400"
+               fitHeight="800"
+               preserveRatio="false"
+               smooth="true"
+               pickOnBounds="true">
+        <image>
+            <Image url="@../images/member-bookings.jpg"/>
+        </image>
+    </ImageView>
+
+    <!-- 2) CAPA OSCURA -->
+    <Rectangle width="1400" height="800" opacity="0.78">
+        <fill>
+            <Color fx:constant="BLACK"/>
+        </fill>
+    </Rectangle>
+
+    <BorderPane prefWidth="1400" prefHeight="800">
+
+        <!-- TOP BAR -->
+        <top>
+            <HBox alignment="CENTER_LEFT"
+                  spacing="16"
+                  style="-fx-padding: 12 20 0 20;">
+                <children>
+                    <Button text="← Back"
+                            onAction="#onBackClicked"
+                            styleClass="secondary-btn"/>
+
+                    <Label text="My bookings"
+                           style="-fx-text-fill: white;
+                                  -fx-font-size: 26px;
+                                  -fx-font-weight: bold;
+                                  -fx-font-family: 'Impact', 'Arial Black';"/>
+                </children>
             </HBox>
+        </top>
 
-            <!-- status filter -->
-            <HBox spacing="8" alignment="CENTER_LEFT">
-                <Label text="Status:"/>
-                <ComboBox fx:id="statusFilter" prefWidth="150"/>
+        <!-- CENTER CONTENT: FILTER + TABLE, CENTRADOS Y A 900PX COMO EN BOOKING -->
+        <center>
+            <VBox maxWidth="650"
+                  alignment="TOP_CENTER"
+                  spacing="16"
+                  style="-fx-padding: 70 16 16 16;">
+
+                <!-- STATUS FILTER -->
+                <HBox alignment="CENTER_LEFT" spacing="10"
+                      maxWidth="900">
+                    <children>
+                        <Label text="Status:"
+                               style="-fx-text-fill: #f5f5f5;
+                                      -fx-font-size: 13px;"/>
+
+                        <ComboBox fx:id="statusFilter"
+                                  prefWidth="180"
+                                  styleClass="status-combo-dark"/>
+                    </children>
+                </HBox>
+
+                <!-- TABLE -->
+                <TableView fx:id="bookingsTable"
+                           styleClass="booking-table"
+                           prefHeight="380"
+                           prefWidth="650">
+                    <columns>
+                        <TableColumn fx:id="classColumn"  text="Class"   prefWidth="200"/>
+                        <TableColumn fx:id="dateColumn"   text="Date"    prefWidth="100"/>
+                        <TableColumn fx:id="timeColumn"   text="Time"    prefWidth="100"/>
+                        <TableColumn fx:id="statusColumn" text="Status"  prefWidth="100"/>
+                        <TableColumn fx:id="actionColumn" text="Action"  prefWidth="110"/>
+                    </columns>
+                </TableView>
+
+            </VBox>
+        </center>
+
+        <!-- BOTTOM MESSAGE -->
+        <bottom>
+            <HBox alignment="CENTER_LEFT"
+                  spacing="16"
+                  style="-fx-padding: 12 20 20 20;">
+                <children>
+                    <Label fx:id="messageLabel"
+                           textFill="red"
+                           style="-fx-text-fill: #ff6666;"/>
+                </children>
             </HBox>
-        </VBox>
-    </top>
+        </bottom>
 
-    <center>
-        <TableView fx:id="bookingsTable" prefHeight="350">
-            <columns>
-                <TableColumn fx:id="classColumn" text="Class" prefWidth="200"/>
-                <TableColumn fx:id="dateColumn" text="Date" prefWidth="120"/>
-                <TableColumn fx:id="timeColumn" text="Time" prefWidth="100"/>
-                <TableColumn fx:id="statusColumn" text="Status" prefWidth="110"/>
-                <TableColumn fx:id="actionColumn" text="Action" prefWidth="120"/>
-            </columns>
-        </TableView>
-    </center>
-
-    <bottom>
-        <HBox spacing="16" style="-fx-padding: 16;">
-            <Label fx:id="messageLabel" textFill="red"/>
-        </HBox>
-    </bottom>
-</BorderPane>
+    </BorderPane>
+</StackPane>
