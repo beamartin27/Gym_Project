@@ -32,7 +32,7 @@ public class AppConfig {
         // 3) Create services using the repositories
         authService = new AuthServiceImpl(userRepository);
         classService = new ClassServiceImpl(classRepository);
-        bookingService = new BookingServiceImpl(bookingRepository, classRepository);
+        bookingService = new BookingServiceImpl(bookingRepository, classRepository, progressService);
         progressService = new ProgressServiceImpl(progressRepository);
 
         DemoDataSeeder.seed();

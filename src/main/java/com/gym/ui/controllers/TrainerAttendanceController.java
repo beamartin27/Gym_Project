@@ -56,7 +56,6 @@ public class TrainerAttendanceController {
     private Label messageLabel;
 
     private BookingService bookingService;
-    private ProgressService progressService;
     private UserRepository userRepository;
 
     private int scheduleId;
@@ -67,7 +66,6 @@ public class TrainerAttendanceController {
     @FXML
     private void initialize() {
         bookingService = AppConfig.getBookingService();
-        progressService = AppConfig.getProgressService();
         userRepository = AppConfig.getUserRepository();
 
         memberColumn.setCellValueFactory(c -> c.getValue().memberNameProperty());
@@ -139,7 +137,7 @@ public class TrainerAttendanceController {
     private void loadBookings() {
         List<Booking> bookings = bookingService.getScheduleBookings(scheduleId)
                 .stream()
-                .filter(Booking::isConfirmed)
+                .filter(b -> !b.isCancelled())  // show CONFIRMED + ATTENDED
                 .toList();
         List<AttendanceRow> rows = new ArrayList<>();
 
@@ -151,7 +149,7 @@ public class TrainerAttendanceController {
                     b.getUserId(),
                     name,
                     b.getStatus(),
-                    false // default: not attended, trainer will tick
+                    b.isAttended()   // checkbox reflects stored attendance
             ));
         }
 
@@ -173,18 +171,26 @@ public class TrainerAttendanceController {
 
         for (AttendanceRow row : attendanceTable.getItems()) {
             if (row.isAttended()) {
-                // Award points based on classType (HIIT, YOGA, STRENGTH, etc.)
-                progressService.awardPointsForClass(row.getUserId(), classType);
-                awarded++;
+                // BookingService will:
+                //  - mark booking as ATTENDED
+                //  - award XP only if it wasn't attended before
+                boolean ok = bookingService.markAttended(row.getBookingId());
+                if (ok) {
+                    awarded++;
+                }
             }
         }
 
         if (awarded == 0) {
-            messageLabel.setText("No attendees selected.");
+            messageLabel.setText("No attendees selected or all already marked as attended.");
         } else {
             messageLabel.setText("Saved attendance and awarded points to " + awarded + " member(s).");
         }
+
+        // Refresh table so statuses/checkboxes match DB
+        loadBookings();
     }
+
 
     @FXML
     private void onCloseClicked() {

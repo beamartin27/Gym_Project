@@ -7,7 +7,7 @@ public class Booking {
     private int userId;
     private int scheduleId;
     private LocalDateTime bookingDate;
-    private String status; // "CONFIRMED", "CANCELLED"
+    private String status; // "CONFIRMED", "CANCELLED", "ATTENDED"
 
     // Constructor for new booking
     public Booking(int userId, int scheduleId, String status) {
@@ -46,6 +46,8 @@ public class Booking {
         return "CANCELLED".equalsIgnoreCase(status);
     }
 
+    public boolean isAttended() { return "ATTENDED".equalsIgnoreCase(status);}
+
     public void cancel() {
         this.status = "CANCELLED";
     }
@@ -53,6 +55,8 @@ public class Booking {
     public void confirm() {
         this.status = "CONFIRMED";
     }
+
+    public void markAttended() { this.status = "ATTENDED"; }
 
     @Override
     public String toString() {

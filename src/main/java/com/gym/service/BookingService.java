@@ -14,4 +14,6 @@ public interface BookingService {
 
     boolean isScheduleAvailable(int scheduleId);
     boolean hasUserBooked(int userId, int scheduleId);
+
+    boolean markAttended(int bookingId);
 }

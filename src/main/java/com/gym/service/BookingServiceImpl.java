@@ -2,6 +2,7 @@ package com.gym.service;
 
 import com.gym.domain.Booking;
 import com.gym.domain.ClassSchedule;
+import com.gym.domain.GymClass;
 import com.gym.repository.BookingRepository;
 import com.gym.repository.ClassRepository;
 
@@ -10,10 +11,12 @@ import java.util.List;
 public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
     private final ClassRepository classRepository;
+    private final ProgressService progressService;
 
-    public BookingServiceImpl(BookingRepository bookingRepository, ClassRepository classRepository) {
+    public BookingServiceImpl(BookingRepository bookingRepository, ClassRepository classRepository, ProgressService progressService) {
         this.bookingRepository = bookingRepository;
         this.classRepository = classRepository;
+        this.progressService = progressService;
     }
     @Override
     public boolean bookClass(int userId, int scheduleId) {
@@ -102,5 +105,42 @@ public class BookingServiceImpl implements BookingService {
         List<Booking> userBookings = bookingRepository.findByUserId(userId);
         return userBookings.stream()
                 .anyMatch(b -> b.getScheduleId() == scheduleId && b.isConfirmed());
+    }
+
+    @Override
+    public boolean markAttended(int bookingId) {
+        Booking booking = bookingRepository.findById(bookingId);
+        if (booking == null) {
+            return false;
+        }
+
+        // If already attended, do NOTHING (avoid double XP)
+        if (booking.isAttended()) {
+            return false;
+        }
+
+        // 1) Mark booking as attended and persist
+        booking.markAttended();
+        boolean updated = bookingRepository.update(booking);
+        if (!updated) {
+            System.err.println("Failed to update booking as ATTENDED");
+            return false;
+        }
+
+        // 2) Resolve schedule and class type to know which XP to grant
+        ClassSchedule schedule = classRepository.findScheduleById(booking.getScheduleId());
+        if (schedule == null) {
+            return true; // booking updated; can’t find schedule (no XP)
+        }
+
+        GymClass gymClass = classRepository.findClassById(schedule.getClassId());
+        if (gymClass == null) {
+            return true; // booking updated; no class info
+        }
+
+        // 3) Award XP ONCE for this booking
+        progressService.awardPointsForClass(booking.getUserId(), gymClass.getClassType());
+
+        return true;
     }
 }

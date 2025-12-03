@@ -133,7 +133,7 @@ public class ProgressController {
 
     private void loadRecentClasses(int userId) {
         List<RecentRow> rows = bookingService.getUserBookings(userId).stream()
-                .filter(b -> b.isConfirmed()) // completed = confirmed + past
+                .filter(b -> b.isAttended()) // completed = confirmed + past
                 .map(b -> {
                     ClassSchedule s = classService.getScheduleById(b.getScheduleId());
                     if (s == null) return null;
@@ -143,17 +143,24 @@ public class ProgressController {
                             s.getScheduledDate(),
                             s.getEndTime()
                     );
-
+                    // skip future classes just in case
                     if (classEnd.isAfter(LocalDateTime.now())) return null;
 
                     GymClass gc = classService.getClassById(s.getClassId());
                     if (gc == null) return null;
 
+                    // REAL XP given by this class type
+                    int perClassXp = progressService
+                            .getPointsForClassType(gc.getClassType())
+                            .values().stream()
+                            .mapToInt(Integer::intValue)
+                            .sum();
+
                     return new RecentRow(
                             gc.getClassName(),
                             DATE_FORMATTER.format(s.getScheduledDate()),
                             gc.getClassType(),
-                            10 // display-only for now
+                            perClassXp
                     );
                 })
                 .filter(r -> r != null)
