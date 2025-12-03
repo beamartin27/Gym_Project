@@ -9,7 +9,7 @@ import com.gym.service.AuthService;
 import com.gym.service.BookingService;
 import com.gym.service.ClassService;
 import com.gym.utils.SceneManager;
-import com.gym.ui.utils.SessionManager;
+import com.gym.utils.SessionManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 

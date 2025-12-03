@@ -4,7 +4,7 @@ import com.gym.AppConfig;
 import com.gym.domain.User;
 import com.gym.service.AuthService;
 import com.gym.utils.SceneManager;
-import com.gym.ui.utils.SessionManager;
+import com.gym.utils.SessionManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;

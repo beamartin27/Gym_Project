@@ -2,93 +2,203 @@
 
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.paint.Color?>
 
-<BorderPane xmlns="http://javafx.com/javafx/21"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.gym.ui.controllers.AdminSchedulesController">
+<StackPane xmlns="http://javafx.com/javafx/21"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.gym.ui.controllers.AdminSchedulesController"
+           styleClass="app-root"
+           prefWidth="1400"
+           prefHeight="800">
 
-    <top>
-        <HBox spacing="10" style="-fx-padding: 10;">
-            <Label text="Manage schedules"
-                   style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
-            <Pane HBox.hgrow="ALWAYS"/>
-            <Button text="Back to dashboard" onAction="#onBackClicked"/>
-        </HBox>
-    </top>
+    <!-- 1) IMAGEN DE FONDO -->
+    <ImageView fitWidth="1400"
+               fitHeight="800"
+               preserveRatio="false"
+               smooth="true"
+               pickOnBounds="true">
+        <image>
+            <!-- CAMBIA la ruta a la que tú uses -->
+            <Image url="@../images/admin.jpg"/>
+        </image>
+    </ImageView>
 
-    <center>
-        <VBox spacing="10" style="-fx-padding: 10;">
+    <!-- 2) CAPA OSCURA -->
+    <Rectangle width="1400" height="800" opacity="0.50">
+        <fill>
+            <Color fx:constant="BLACK"/>
+        </fill>
+    </Rectangle>
 
-            <!-- Filter row -->
-            <HBox spacing="10">
-                <Label text="Show schedules for date:"/>
-                <DatePicker fx:id="dateFilterPicker" onAction="#onFilterDateChanged"/>
-                <Button text="Clear" onAction="#onClearDateFilterClicked"/>
-            </HBox>
+    <!-- CONTENEDOR PRINCIPAL -->
+    <BorderPane prefWidth="1400" prefHeight="800">
 
+        <!-- TOP: título centrado + botón back a la derecha -->
+        <top>
+            <StackPane style="-fx-padding: 20 20 0 20;">
+                <children>
+                    <Button text="Back to dashboard"
+                            onAction="#onBackClicked"
+                            styleClass="secondary-btn"
+                            StackPane.alignment="TOP_RIGHT"/>
+                </children>
+            </StackPane>
+        </top>
 
-            <!-- Schedules table -->
-            <TableView fx:id="schedulesTable" prefHeight="250" prefWidth="800">
-                <columns>
-                    <TableColumn fx:id="idColumn" text="ID" prefWidth="60"/>
-                    <TableColumn fx:id="classColumn" text="Class" prefWidth="150"/>
-                    <TableColumn fx:id="instructorColumn" text="Instructor" prefWidth="150"/>
-                    <TableColumn fx:id="dateColumn" text="Date" prefWidth="120"/>
-                    <TableColumn fx:id="timeColumn" text="Time" prefWidth="160"/>
-                    <TableColumn fx:id="spotsColumn" text="Available spots" prefWidth="120"/>
-                </columns>
-            </TableView>
+        <!-- CENTRO: filtro + tabla + formulario -->
+        <center>
+            <VBox alignment="TOP_CENTER"
+                  spacing="18"
+                  style="-fx-padding: 0 40 60 40;">
 
-            <!-- Form to create a new schedule -->
-            <TitledPane text="Create schedule" expanded="true">
-                <content>
-                    <VBox spacing="8" style="-fx-padding: 10;">
-                        <GridPane hgap="10" vgap="8">
-                            <columnConstraints>
-                                <ColumnConstraints prefWidth="120"/>
-                                <ColumnConstraints prefWidth="250"/>
-                                <ColumnConstraints prefWidth="120"/>
-                                <ColumnConstraints prefWidth="250"/>
-                            </columnConstraints>
+                <Label text="Manage schedules"
+                       style="-fx-text-fill: white;
+                                  -fx-font-size: 32px;
+                                  -fx-font-weight: bold;
+                                  -fx-font-family: 'Impact','Arial Black';"
+                       StackPane.alignment="TOP_CENTER"/>
 
-                            <children>
-                                <Label text="Class:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                                <ComboBox fx:id="classComboBox"
-                                          promptText="Select class"
-                                          GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                <!-- FILTRO DE FECHA -->
+                <HBox alignment="CENTER"
+                      spacing="12"
+                      maxWidth="700">
+                    <children>
+                        <Label text="Show schedules for date:"
+                               style="-fx-text-fill: #f5f5f5;
+                                      -fx-font-size: 13px;"/>
 
-                                <Label text="Date:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                                <DatePicker fx:id="scheduleDatePicker"
-                                            GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                        <!-- MISMO ESTILO QUE EN MEMBER BOOKING -->
+                        <DatePicker fx:id="dateFilterPicker"
+                                    onAction="#onFilterDateChanged"
+                                    styleClass="date-picker-dark"/>
 
-                                <Label text="Start time (HH:mm):" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-                                <TextField fx:id="startTimeField"
-                                           promptText="09:00"
-                                           GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                        <Button text="Clear"
+                                onAction="#onClearDateFilterClicked"
+                                styleClass="secondary-btn"/>
+                    </children>
+                </HBox>
 
-                                <Label text="End time (HH:mm):" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
-                                <TextField fx:id="endTimeField"
-                                           promptText="10:00"
-                                           editable="false"
-                                           GridPane.rowIndex="2" GridPane.columnIndex="3"/>
+                <!-- TABLA DE SCHEDULES (más alta) -->
+                <StackPane maxWidth="1050" maxHeight="500">
+                    <TableView fx:id="schedulesTable"
+                               styleClass="booking-table"
+                               prefHeight="500"
+                               prefWidth="1050">
+                        <columns>
+                            <TableColumn fx:id="idColumn"        text="ID"              prefWidth="70"/>
+                            <TableColumn fx:id="classColumn"     text="Class"           prefWidth="200"/>
+                            <TableColumn fx:id="instructorColumn" text="Instructor"     prefWidth="200"/>
+                            <TableColumn fx:id="dateColumn"      text="Date"            prefWidth="160"/>
+                            <TableColumn fx:id="timeColumn"      text="Time"            prefWidth="170"/>
+                            <TableColumn fx:id="spotsColumn"     text="Available spots" prefWidth="170"/>
+                        </columns>
+                    </TableView>
+                </StackPane>
 
+                <!-- FORMULARIO: CARD OSCURA INFERIOR -->
+                <StackPane maxWidth="1050" maxHeight="500">
+                    <TitledPane text="Create schedule"
+                                expanded="true"
+                                styleClass="neon-titled-pane">
+                        <content>
+                            <VBox spacing="12"
+                                  style="-fx-padding: 18;
+                                         -fx-background-color: #111111;
+                                         -fx-background-radius: 24;">
+                                <GridPane hgap="14" vgap="10">
+                                    <columnConstraints>
+                                        <ColumnConstraints prefWidth="120"/>
+                                        <ColumnConstraints prefWidth="260"/>
+                                        <ColumnConstraints prefWidth="140"/>
+                                        <ColumnConstraints prefWidth="260"/>
+                                    </columnConstraints>
 
-                                <Label fx:id="capacityLabel"
-                                       text="Capacity / initial spots: -"
-                                       GridPane.rowIndex="3" GridPane.columnIndex="0"
-                                       GridPane.columnSpan="4"/>
-                            </children>
-                        </GridPane>
+                                    <children>
+                                        <!-- CLASS -->
+                                        <Label text="Class:"
+                                               GridPane.rowIndex="0"
+                                               GridPane.columnIndex="0"
+                                               style="-fx-text-fill: #f5f5f5;"/>
 
-                        <HBox spacing="10">
-                            <Button text="Add schedule" onAction="#onAddScheduleClicked"/>
-                            <Button text="Delete selected schedule" onAction="#onDeleteScheduleClicked"/>
-                        </HBox>
-                    </VBox>
-                </content>
-            </TitledPane>
+                                        <ComboBox fx:id="classComboBox"
+                                                  promptText="Select class"
+                                                  GridPane.rowIndex="0"
+                                                  GridPane.columnIndex="1"
+                                                  styleClass="combo-dark"/>
 
-        </VBox>
-    </center>
+                                        <!-- DATE -->
+                                        <Label text="Date:"
+                                               GridPane.rowIndex="1"
+                                               GridPane.columnIndex="0"
+                                               style="-fx-text-fill: #f5f5f5;"/>
 
-</BorderPane>
+                                        <DatePicker fx:id="scheduleDatePicker"
+                                                    GridPane.rowIndex="1"
+                                                    GridPane.columnIndex="1"
+                                                    styleClass="date-picker-dark"/>
+
+                                        <!-- START TIME -->
+                                        <Label text="Start time (HH:mm):"
+                                               GridPane.rowIndex="2"
+                                               GridPane.columnIndex="0"
+                                               style="-fx-text-fill: #f5f5f5;"/>
+
+                                        <TextField fx:id="startTimeField"
+                                                   promptText="09:00"
+                                                   GridPane.rowIndex="2"
+                                                   GridPane.columnIndex="1"
+                                                   style="-fx-background-color: #000000;
+                                                          -fx-text-fill: #f5f5f5;
+                                                          -fx-background-radius: 999;"/>
+
+                                        <!-- END TIME -->
+                                        <Label text="End time (HH:mm):"
+                                               GridPane.rowIndex="2"
+                                               GridPane.columnIndex="2"
+                                               style="-fx-text-fill: #f5f5f5;"/>
+
+                                        <TextField fx:id="endTimeField"
+                                                   promptText="10:00"
+                                                   editable="false"
+                                                   GridPane.rowIndex="2"
+                                                   GridPane.columnIndex="3"
+                                                   style="-fx-background-color: #000000;
+                                                          -fx-text-fill: #f5f5f5;
+                                                          -fx-background-radius: 999;"/>
+
+                                        <!-- CAPACITY LABEL -->
+                                        <Label fx:id="capacityLabel"
+                                               text="Capacity / initial spots: -"
+                                               GridPane.rowIndex="3"
+                                               GridPane.columnIndex="0"
+                                               GridPane.columnSpan="4"
+                                               style="-fx-text-fill: #f5f5f5;"/>
+                                    </children>
+                                </GridPane>
+
+                                <!-- BOTONES ABAJO, CENTRADOS -->
+                                <HBox alignment="CENTER"
+                                      spacing="18"
+                                      style="-fx-padding: 10 0 0 0;">
+                                    <children>
+                                        <Button text="Add schedule"
+                                                onAction="#onAddScheduleClicked"
+                                                styleClass="primary-btn"/>
+
+                                        <Button text="Delete selected schedule"
+                                                onAction="#onDeleteScheduleClicked"
+                                                styleClass="primary-btn"/>
+                                    </children>
+                                </HBox>
+                            </VBox>
+                        </content>
+                    </TitledPane>
+                </StackPane>
+
+            </VBox>
+        </center>
+    </BorderPane>
+</StackPane>

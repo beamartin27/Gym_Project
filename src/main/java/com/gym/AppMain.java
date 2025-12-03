@@ -4,7 +4,6 @@ import com.gym.domain.User;
 import com.gym.domain.GymClass;
 import com.gym.domain.ClassSchedule;
 import com.gym.repository.UserRepository;
-import com.gym.repository.sqlite.SqliteDatabaseManager;
 import com.gym.service.ClassService;
 import com.gym.utils.SceneManager;
 import javafx.application.Application;
@@ -17,16 +16,15 @@ public class AppMain extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        // 1) DB + servicios
-        SqliteDatabaseManager.initializeDatabase();
+        // 1) DB + services
         AppConfig.init();
         seedDefaultUsers();
         seedDemoClassesAndSchedules();
 
-        // 2) Guardamos el stage principal
+        // 2) Save principal stage
         SceneManager.setPrimaryStage(stage);
 
-        // 3) Mostramos login
+        // 3) Show login
         SceneManager.switchTo("/views/login.fxml", "Gym Class Booking - Login");
     }
 

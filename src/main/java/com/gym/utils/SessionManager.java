@@ -1,4 +1,4 @@
-package com.gym.ui.utils;
+package com.gym.utils;
 
 import com.gym.domain.User;
 

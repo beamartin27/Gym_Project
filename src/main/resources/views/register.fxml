@@ -7,21 +7,57 @@
       xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.gym.ui.controllers.RegisterController"
+      styleClass="app-root"
       style="-fx-padding: 30;">
 
     <children>
-        <Label text="Create Your Account"
-               style="-fx-font-size: 20; -fx-font-weight: bold;"/>
+        <!-- Center card, same style as login -->
+        <VBox alignment="CENTER"
+              spacing="16"
+              styleClass="login-card"
+              prefWidth="360"
+              maxWidth="360">
+            <children>
 
-        <TextField fx:id="usernameField" promptText="Username" prefWidth="220"/>
-        <TextField fx:id="emailField" promptText="Email" prefWidth="220"/>
-        <PasswordField fx:id="passwordField" promptText="Password" prefWidth="220"/>
-        <PasswordField fx:id="confirmPasswordField" promptText="Confirm password" prefWidth="220"/>
+                <!-- Title styled like the login title -->
+                <Label text="REGISTER" styleClass="login-title"/>
 
-        <Label fx:id="errorLabel" textFill="red"/>
+                <!-- Inputs (same width as login fields) -->
+                <TextField fx:id="usernameField"
+                           promptText="Username"
+                           prefWidth="260"/>
 
-        <Button text="Register" onAction="#onRegisterClicked" prefWidth="220"/>
-        <Button text="Back to Login" onAction="#onBackClicked" prefWidth="220"/>
+                <TextField fx:id="emailField"
+                           promptText="Email"
+                           prefWidth="260"/>
+
+                <PasswordField fx:id="passwordField"
+                               promptText="Password"
+                               prefWidth="260"/>
+
+                <PasswordField fx:id="confirmPasswordField"
+                               promptText="Confirm password"
+                               prefWidth="260"/>
+
+                <!-- Error label -->
+                <Label fx:id="errorLabel"
+                       textFill="red"/>
+
+                <!-- Register button (neon primary) -->
+                <Button text="Register"
+                        onAction="#onRegisterClicked"
+                        defaultButton="true"
+                        prefWidth="260"
+                        styleClass="primary-btn"/>
+
+                <!-- Back button (outline secondary), same width -->
+                <Button text="Back to Login"
+                        onAction="#onBackClicked"
+                        prefWidth="260"
+                        styleClass="secondary-btn"/>
+
+            </children>
+        </VBox>
     </children>
 
 </VBox>

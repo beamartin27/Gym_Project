@@ -2,79 +2,176 @@
 
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.paint.Color?>
 
-<BorderPane xmlns="http://javafx.com/javafx/21"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.gym.ui.controllers.AdminUsersController">
+<StackPane xmlns="http://javafx.com/javafx/21"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.gym.ui.controllers.AdminUsersController"
+           styleClass="app-root"
+           prefWidth="1400"
+           prefHeight="800">
 
-    <!-- Top bar -->
-    <top>
-        <HBox spacing="10" style="-fx-padding: 10;">
-            <Label text="Manage users (members &amp; trainers)"
-                   style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
-            <Pane HBox.hgrow="ALWAYS"/>
-            <Button text="Back to dashboard" onAction="#onBackClicked"/>
-        </HBox>
-    </top>
+    <!-- 1) BACKGROUND IMAGE -->
+    <ImageView fitWidth="1400"
+               fitHeight="800"
+               preserveRatio="false"
+               smooth="true"
+               pickOnBounds="true">
+        <image>
+            <Image url="@../images/admin.jpg"/>
+        </image>
+    </ImageView>
 
-    <!-- Center: table + form -->
-    <center>
-        <VBox spacing="10" style="-fx-padding: 10;">
+    <!-- 2) DARK OVERLAY -->
+    <Rectangle width="1400" height="800" opacity="0.50">
+        <fill>
+            <Color fx:constant="BLACK"/>
+        </fill>
+    </Rectangle>
 
-            <!-- Users table -->
-            <TableView fx:id="usersTable" prefHeight="250" prefWidth="800">
-                <columns>
-                    <TableColumn fx:id="idColumn" text="ID" prefWidth="60"/>
-                    <TableColumn fx:id="usernameColumn" text="Username" prefWidth="150"/>
-                    <TableColumn fx:id="emailColumn" text="Email" prefWidth="200"/>
-                    <TableColumn fx:id="roleColumn" text="Role" prefWidth="100"/>
-                    <TableColumn fx:id="createdAtColumn" text="Created at" prefWidth="150"/>
-                </columns>
-            </TableView>
+    <!-- 3) MAIN CONTENT -->
+    <BorderPane prefWidth="1400" prefHeight="800">
 
-            <!-- Form -->
-            <TitledPane text="Create member or trainer" expanded="true">
-                <content>
-                    <VBox spacing="8" style="-fx-padding: 10;">
-                        <GridPane hgap="10" vgap="8">
-                            <columnConstraints>
-                                <ColumnConstraints prefWidth="100"/>
-                                <ColumnConstraints prefWidth="250"/>
-                                <ColumnConstraints prefWidth="100"/>
-                                <ColumnConstraints prefWidth="250"/>
-                            </columnConstraints>
+        <!-- TOP: back button -->
+        <top>
+            <StackPane style="-fx-padding: 20 20 0 20;">
+                <children>
+                    <Button text="Back to dashboard"
+                            onAction="#onBackClicked"
+                            styleClass="secondary-btn"
+                            StackPane.alignment="TOP_RIGHT"/>
+                </children>
+            </StackPane>
+        </top>
 
-                            <children>
-                                <Label text="Username:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                                <TextField fx:id="usernameField"
-                                           GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+        <!-- CENTER: title + users table + create form -->
+        <center>
+            <VBox alignment="TOP_CENTER"
+                  spacing="18"
+                  style="-fx-padding: 40 40 40 40;">
 
-                                <Label text="Password:" GridPane.rowIndex="0" GridPane.columnIndex="2"/>
-                                <PasswordField fx:id="passwordField"
-                                               GridPane.rowIndex="0" GridPane.columnIndex="3"/>
+                <!-- TITLE -->
+                <Label text="Manage users"
+                       style="-fx-text-fill: white;
+                              -fx-font-size: 32px;
+                              -fx-font-weight: bold;
+                              -fx-font-family: 'Impact','Arial Black';"/>
 
-                                <Label text="Email:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                                <TextField fx:id="emailField"
-                                           GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                <!-- USERS TABLE -->
+                <StackPane maxWidth="1050" maxHeight="340">
+                    <TableView fx:id="usersTable"
+                               prefHeight="260"
+                               prefWidth="1000"
+                               styleClass="booking-table">
+                        <columns>
+                            <TableColumn fx:id="idColumn" text="ID" prefWidth="60"/>
+                            <TableColumn fx:id="usernameColumn" text="Username" prefWidth="150"/>
+                            <TableColumn fx:id="emailColumn" text="Email" prefWidth="260"/>
+                            <TableColumn fx:id="roleColumn" text="Role" prefWidth="120"/>
+                            <TableColumn fx:id="createdAtColumn" text="Created at" prefWidth="220"/>
+                        </columns>
+                    </TableView>
+                </StackPane>
 
-                                <Label text="Role:" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
-                                <ComboBox fx:id="roleComboBox"
-                                          promptText="MEMBER or TRAINER"
-                                          GridPane.rowIndex="1" GridPane.columnIndex="3"/>
-                            </children>
-                        </GridPane>
+                <!-- CREATE / EDIT FORM -->
+                <StackPane maxWidth="1050" maxHeight="260">
+                    <TitledPane text="Create member or trainer"
+                                expanded="true"
+                                styleClass="neon-titled-pane">
+                        <content>
+                            <VBox spacing="12"
+                                  style="-fx-padding: 18;
+                                         -fx-background-color: #111111;
+                                         -fx-background-radius: 24;">
+                                <GridPane hgap="14" vgap="10">
+                                    <columnConstraints>
+                                        <ColumnConstraints prefWidth="120"/>
+                                        <ColumnConstraints prefWidth="260"/>
+                                        <ColumnConstraints prefWidth="120"/>
+                                        <ColumnConstraints prefWidth="260"/>
+                                    </columnConstraints>
 
-                        <HBox spacing="10">
-                            <Button text="Add user" onAction="#onAddUserClicked"/>
-                            <Button text="Delete selected user" onAction="#onDeleteUserClicked"/>
-                            <Pane HBox.hgrow="ALWAYS"/>
-                            <Button text="Clear form" onAction="#onClearFormClicked"/>
-                        </HBox>
-                    </VBox>
-                </content>
-            </TitledPane>
+                                    <!-- ROW 0: username + password -->
+                                    <children>
+                                        <Label text="Username:"
+                                               GridPane.rowIndex="0"
+                                               GridPane.columnIndex="0"
+                                               style="-fx-text-fill: #f5f5f5;"/>
+                                        <TextField fx:id="usernameField"
+                                                   promptText="username"
+                                                   GridPane.rowIndex="0"
+                                                   GridPane.columnIndex="1"
+                                                   style="-fx-background-color: #000000;
+                                                          -fx-text-fill: #f5f5f5;
+                                                          -fx-background-radius: 999;"/>
 
-        </VBox>
-    </center>
+                                        <Label text="Password:"
+                                               GridPane.rowIndex="0"
+                                               GridPane.columnIndex="2"
+                                               style="-fx-text-fill: #f5f5f5;"/>
+                                        <PasswordField fx:id="passwordField"
+                                                       promptText="password"
+                                                       GridPane.rowIndex="0"
+                                                       GridPane.columnIndex="3"
+                                                       style="-fx-background-color: #000000;
+                                                              -fx-text-fill: #f5f5f5;
+                                                              -fx-background-radius: 999;"/>
 
-</BorderPane>
+                                        <!-- ROW 1: email + role -->
+                                        <Label text="Email:"
+                                               GridPane.rowIndex="1"
+                                               GridPane.columnIndex="0"
+                                               style="-fx-text-fill: #f5f5f5;"/>
+                                        <TextField fx:id="emailField"
+                                                   promptText="email@example.com"
+                                                   GridPane.rowIndex="1"
+                                                   GridPane.columnIndex="1"
+                                                   style="-fx-background-color: #000000;
+                                                          -fx-text-fill: #f5f5f5;
+                                                          -fx-background-radius: 999;"/>
+
+                                        <Label text="Role:"
+                                               GridPane.rowIndex="1"
+                                               GridPane.columnIndex="2"
+                                               style="-fx-text-fill: #f5f5f5;"/>
+                                        <ComboBox fx:id="roleComboBox"
+                                                  promptText="MEMBER or TRAINER"
+                                                  GridPane.rowIndex="1"
+                                                  GridPane.columnIndex="3"
+                                                  styleClass="combo-dark"/>
+                                    </children>
+                                </GridPane>
+
+                                <!-- FORM BUTTONS -->
+                                <HBox spacing="16"
+                                      alignment="CENTER_LEFT"
+                                      style="-fx-padding: 6 0 0 0;">
+                                    <children>
+                                        <Button text="Add user"
+                                                onAction="#onAddUserClicked"
+                                                styleClass="primary-btn"/>
+
+                                        <Button text="Delete selected user"
+                                                onAction="#onDeleteUserClicked"
+                                                styleClass="primary-btn"/>
+
+                                        <Pane HBox.hgrow="ALWAYS"/>
+
+                                        <Button text="Clear form"
+                                                onAction="#onClearFormClicked"
+                                                styleClass="secondary-btn"/>
+                                    </children>
+                                </HBox>
+                            </VBox>
+                        </content>
+                    </TitledPane>
+                </StackPane>
+
+            </VBox>
+        </center>
+
+    </BorderPane>
+</StackPane>

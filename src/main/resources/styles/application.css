@@ -371,3 +371,57 @@
     -fx-background-radius: 999;
 }
 
+/* TitledPane de "Create schedule" */
+.neon-titled-pane {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+/* Barra de título neon */
+.neon-titled-pane > .title {
+    -fx-background-color: #d7ff00;      /* neon */
+    -fx-text-fill: #000000;
+    -fx-font-weight: bold;
+    -fx-background-radius: 24 24 0 0;   /* esquinas redondeadas arriba */
+    -fx-padding: 6 18 6 18;
+    -fx-border-color: transparent;
+}
+
+/* El texto del título en negro */
+.neon-titled-pane > .title > .text {
+    -fx-fill: #000000;
+}
+
+/* Fondo de la zona de contenido (que tú ya pintas de #111 en el VBox) */
+.neon-titled-pane > .content {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+/* ComboBox oscuro para el formulario de schedules */
+.combo-dark.combo-box-base {
+    -fx-background-color: #333333;
+    -fx-background-radius: 999;
+    -fx-border-color: transparent;
+    -fx-text-fill: #f5f5f5;
+}
+
+/* Texto dentro de la celda */
+.combo-dark.combo-box-base > .list-cell {
+    -fx-text-fill: #f5f5f5;
+}
+
+/* Botón de la flecha integrado */
+.combo-dark.combo-box-base > .arrow-button {
+    -fx-background-color: transparent;
+    -fx-background-radius: 999;
+}
+
+/* Cuando está en foco, mantener el mismo color */
+.combo-dark.combo-box-base:focused {
+    -fx-background-color: #444444;
+}
+
+

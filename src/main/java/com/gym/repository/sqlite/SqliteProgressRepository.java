@@ -1,6 +1,7 @@
 package com.gym.repository.sqlite;
 
 import com.gym.domain.FitnessProgress;
+import com.gym.repository.DatabaseManager;
 import com.gym.repository.ProgressRepository;
 
 import java.sql.*;
@@ -9,11 +10,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SqliteProgressRepository implements ProgressRepository {
+
+    private final DatabaseManager dbManager;
+
+    public SqliteProgressRepository(DatabaseManager dbManager) {
+        this.dbManager = dbManager;
+    }
+
     @Override
     public boolean save(FitnessProgress progress) {
         String sql = "INSERT INTO fitness_progress (user_id, category, total_points, last_updated) VALUES (?, ?, ?, ?)";
 
-        try (Connection conn = SqliteDatabaseManager.getConnection();
+        try (Connection conn = dbManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, progress.getUserId());
@@ -42,7 +50,7 @@ public class SqliteProgressRepository implements ProgressRepository {
     public FitnessProgress findById(int progressId) {
         String sql = "SELECT * FROM fitness_progress WHERE progress_id = ?";
 
-        try (Connection conn = SqliteDatabaseManager.getConnection();
+        try (Connection conn = dbManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, progressId);
@@ -61,7 +69,7 @@ public class SqliteProgressRepository implements ProgressRepository {
     public FitnessProgress findByUserIdAndCategory(int userId, String category) {
         String sql = "SELECT * FROM fitness_progress WHERE user_id = ? AND category = ?";
 
-        try (Connection conn = SqliteDatabaseManager.getConnection();
+        try (Connection conn = dbManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, userId);
@@ -80,7 +88,7 @@ public class SqliteProgressRepository implements ProgressRepository {
         List<FitnessProgress> progressList = new ArrayList<>();
         String sql = "SELECT * FROM fitness_progress WHERE user_id = ? ORDER BY total_points DESC";
 
-        try (Connection conn = SqliteDatabaseManager.getConnection();
+        try (Connection conn = dbManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, userId);
@@ -100,7 +108,7 @@ public class SqliteProgressRepository implements ProgressRepository {
         List<FitnessProgress> progressList = new ArrayList<>();
         String sql = "SELECT * FROM fitness_progress ORDER BY total_points DESC";
 
-        try (Connection conn = SqliteDatabaseManager.getConnection();
+        try (Connection conn = dbManager.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
@@ -108,7 +116,7 @@ public class SqliteProgressRepository implements ProgressRepository {
                 progressList.add(extractProgressFromResultSet(rs));
             }
         } catch (SQLException e) {
-            System.err.println("❌ Error getting all progress: " + e.getMessage());
+            System.err.println("Error getting all progress: " + e.getMessage());
         }
         return progressList;
     }
@@ -117,7 +125,7 @@ public class SqliteProgressRepository implements ProgressRepository {
     public boolean update(FitnessProgress progress) {
         String sql = "UPDATE fitness_progress SET total_points = ?, last_updated = ? WHERE progress_id = ?";
 
-        try (Connection conn = SqliteDatabaseManager.getConnection();
+        try (Connection conn = dbManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, progress.getTotalPoints());
@@ -139,7 +147,7 @@ public class SqliteProgressRepository implements ProgressRepository {
     public boolean delete(int progressId) {
         String sql = "DELETE FROM fitness_progress WHERE progress_id = ?";
 
-        try (Connection conn = SqliteDatabaseManager.getConnection();
+        try (Connection conn = dbManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, progressId);
