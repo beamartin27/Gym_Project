@@ -1,142 +1,146 @@
-# Gym Class Booking – JavaFX App
+# GymClass Booking System
 
-JavaFX + SQLite desktop app for managing gym classes, bookings and member progress.
+A JavaFX + SQLite desktop application for managing gym group classes, bookings and member progress.
 
-Layers:
-- **domain** – core entities (User, GymClass, Booking, ClassSchedule, FitnessProgress)
-- **repository** – persistence (SQLite via `sqlite-jdbc`)
-- **service** – business logic
-- **ui** – JavaFX controllers + FXML views
-- **AppMain** – entry point
-
-A default admin user is seeded at startup:
-- **username:** `admin`
-- **password:** `admin123`
+- **Admins** manage users, classes and schedules.
+- **Trainers** mark attendance and award XP.
+- **Members** book classes and track their fitness progress.
 
 ---
 
-## 1. Requirements
+## 1. Tech Stack
 
-- **JDK 21** (or 17+, but project is configured for 21)
-- **IntelliJ IDEA** (preferably Community Edition 2024+)
-- **Internet access** (first run only, for Maven to download dependencies)
-- **JavaFX SDK 21** (if you want to run via IntelliJ run configuration)
-    - Download from OpenJFX and unzip, e.g. to  
-      `C:\openjfx-21.0.9_windows-x64_bin-sdk\javafx-sdk-21.0.9`
-
-> SQLite is handled via Maven `org.xerial:sqlite-jdbc`, no manual JAR setup needed.
+- **Language:** Java 17+
+- **UI:** JavaFX (FXML)
+- **Build tool:** Maven
+- **Database:** SQLite (file-based, created automatically)
 
 ---
 
-## 2. Getting the project
+## 2. How to Run the Application
 
-### Option A – Clone with Git (recommended)
+### 2.1. Running from an IDE (IntelliJ / Eclipse)
+
+1. Make sure you have **JDK 17+** installed.
+2. Open the project as a **Maven** project.
+3. Let Maven download dependencies (`mvn clean install` or via the IDE).
+4. Set the run configuration to start the class:
+```text
+   com.gym.AppMain
+```
+5. Run the application.
+
+The SQLite database file will be created automatically on first launch, and demo data (users, classes, schedules) will be seeded.
+
+### 2.2. Running from the command line (jar)
+
+Make sure you have the JavaFX SDK installed.
+
+Example (Windows):
 ```bash
-git clone <repo-url>
-cd Gym_Project
+java --module-path C:\openjfx-21.0.9_windows-x64_bin-sdk\javafx-sdk-21.0.9\lib ^
+     --add-modules javafx.controls,javafx.fxml ^
+     -jar Gym_Project.jar
 ```
 
-Then open the project in IntelliJ:
-
-1. **File → Open…**
-2. Select the `pom.xml` inside the project folder.
-3. IntelliJ will recognise it as a Maven project – accept the import.
-
-### Option B – Download ZIP
-
-1. On GitHub: **Code → Download ZIP**.
-2. Unzip somewhere (e.g. `C:\Users\...\Gym_Project`).
-3. In IntelliJ: **File → Open…** and select the `pom.xml` in the unzipped folder.
-
-The steps after this are the same.
+Adjust the --module-path to the location of your JavaFX SDK (...\javafx-sdk-XX\lib).
 
 ---
 
-## 3. IntelliJ configuration
+## 3. Database
 
-### 3.1. Set project SDK
+- **Database:** SQLite file (path configured in `SqliteDatabaseManager`).
+- **Tables created on startup:**
+    - `users`
+    - `classes`
+    - `class_schedule`
+    - `bookings`
+    - `fitness_progress`
+- **Demo data seeded:**
+    - default admin/trainer/member users
+    - sample classes and schedules
 
-1. **File → Project Structure… → Project**
-2. **Project SDK:** select **JDK 21**  
-   (or point it to your installed JDK 21 folder).
-3. **Apply / OK**.
-
-### 3.2. Let Maven download dependencies
-
-IntelliJ should do this automatically.
-
-If not:
-1. Open the **Maven** tool window (right side).
-2. Click the **Reload/Refresh** icon.
-3. Wait until the downloads finish (no red errors).
-
-You should see dependencies like:
-- `org.openjfx:javafx-controls:21.0.6`
-- `org.xerial:sqlite-jdbc:3.43.0.0`
-- etc.
+You do not need to create tables manually; they are created in code.
 
 ---
 
-## 4. JavaFX Run Configuration (IntelliJ)
+## 4. Default Credentials
 
-Create a run configuration for the JavaFX app:
+On first run, the system seeds three default accounts:
 
-1. **Run → Edit Configurations…**
-2. Click **+** → choose **Application** (or **JavaFX Application** if available).
-3. Set:
-    - **Name:** `AppMain`
-    - **Main class:** `com.gym.AppMain`
-    - **Use classpath of module:** `Gym_Project` (or whatever the module is called)
-4. In **VM options** add (adapt the path to your JavaFX SDK):
-```
---module-path "C:\openjfx-21.0.9_windows-x64_bin-sdk\javafx-sdk-21.0.9\lib" --add-modules javafx.controls,javafx.fxml
-```
-
-5. **Apply / OK**.
-
----
-
-## 5. Running the app
-
-1. **Run configuration:** select `AppMain`.
-2. Click the green **Run** button.
-
-On first launch you should see in the Run console:
-- Initializing database…
-- Table creation logs for `users`, `classes`, `class_schedule`, `bookings`, `fitness_progress`.
-- Seeded default admin user: `admin` / `admin123` (only the first time).
-
-The app window will open with the login screen.
-
-Use the seeded credentials:
+### Admin
 - **Username:** `admin`
 - **Password:** `admin123`
 
-Depending on the user role, the corresponding dashboard will be loaded.
+### Trainer
+- **Username:** `trainer`
+- **Password:** `trainer123`
 
-The SQLite database file `gym_database.db` is created in the project directory automatically.
+### Member
+- **Username:** `member`
+- **Password:** `member123`
 
----
-
-## 6. Notes for other machines (teacher / teammates)
-
-As long as they:
-- have **JDK 21**,
-- open the project via `pom.xml`,
-- let Maven import dependencies,
-- and configure the JavaFX VM options path to their local JavaFX SDK,
-
-the project should run without extra manual steps.
-
-No one needs to copy JARs manually; everything is resolved via Maven.
+Use these to log in and explore the different dashboards.
 
 ---
 
-## 7. Troubleshooting
+## 5. Main Features
 
-**No suitable driver found for jdbc:sqlite:gym_database.db**  
-→ `sqlite-jdbc` dependency wasn't downloaded.  
-Open **Maven** tool window → **Reload project**.
+### Admin
 
-**Location is not set or FXML load errors**  
-→ The FXML path passed to `SceneManager.switchTo(...)` must match the file under `src/main/resources/views/`.
+- Manage users (create/update/delete).
+- Create and edit Gym classes (name, instructor, type, capacity, duration).
+- Create and edit schedules for classes (date/time, available spots).
+
+### Trainer
+
+- View schedules and bookings for their classes.
+- Mark member attendance for a given class.
+- Award XP to members based on class type (HIIT, YOGA, STRENGTH, CARDIO).
+- Prevent duplicate XP for the same booking (XP is given only once per attended class).
+
+### Member
+
+- Browse available schedules (only future classes with free spots).
+- Book and cancel classes.
+- View **My Bookings**.
+- See a **Progress** screen:
+    - XP and Level for Upper body, Lower body, Arms and Cardio.
+    - Recently completed classes and the XP gained.
+
+---
+
+## 6. Project Structure (High Level)
+```text
+src/main/java/com/gym
+  ├─ AppMain.java          // JavaFX entry point
+  ├─ AppConfig.java        // Wiring of DB, repositories, services, demo seed
+  ├─ domain/               // User, GymClass, ClassSchedule, Booking, FitnessProgress
+  ├─ repository/           // Repository interfaces
+  ├─ repository/sqlite/    // SQLite implementations + SqliteDatabaseManager
+  ├─ service/              // AuthService, ClassService, BookingService, ProgressService
+  ├─ ui/controllers/       // JavaFX controllers (login, dashboards, progress, etc.)
+  └─ utils/                // SceneManager, SessionManager, demo seeding helpers
+```
+
+FXML views are located under:
+```text
+src/main/resources/views/
+```
+
+---
+
+## 7. Building the Project
+
+To build with Maven:
+```bash
+mvn clean package
+```
+
+This will:
+
+- Compile the source code.
+- Run tests (if present).
+- Produce a jar under `target/`.
+
+You can then run that jar as explained in section 2.2.
