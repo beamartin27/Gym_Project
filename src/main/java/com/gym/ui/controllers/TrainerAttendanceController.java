@@ -75,27 +75,31 @@ public class TrainerAttendanceController {
         attendanceTable.setEditable(true);
         attendedColumn.setEditable(true);
 
-        // Bind to the BooleanProperty
         attendedColumn.setCellValueFactory(c -> c.getValue().attendedProperty());
 
-        // Use helper that wires the checkbox to that property
-        attendedColumn.setCellFactory(
-                CheckBoxTableCell.forTableColumn(attendedColumn)
-        );
+        attendedColumn.setCellFactory(col -> new CheckBoxTableCell<AttendanceRow, Boolean>() {
+            @Override
+            public void updateItem(Boolean item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setDisable(false);
+                    return;
+                }
+                AttendanceRow row = (AttendanceRow) getTableRow().getItem();
+                if (row != null && row.isInitiallyAttended()) {
+                    // Already attended in DB -> show tick but don't let trainer change it
+                    setDisable(true);
+                } else {
+                    setDisable(false);
+                }
+            }
+        });
 
         // === fondo responsive ===
         bgImage.fitWidthProperty().bind(rootPane.widthProperty());
         bgImage.fitHeightProperty().bind(rootPane.heightProperty());
         overlay.widthProperty().bind(rootPane.widthProperty());
         overlay.heightProperty().bind(rootPane.heightProperty());
-
-        memberColumn.setCellValueFactory(c -> c.getValue().memberNameProperty());
-        statusColumn.setCellValueFactory(c -> c.getValue().statusProperty());
-
-        attendanceTable.setEditable(true);
-        attendedColumn.setEditable(true);
-        attendedColumn.setCellValueFactory(c -> c.getValue().attendedProperty());
-        attendedColumn.setCellFactory(CheckBoxTableCell.forTableColumn(attendedColumn));
     }
 
     /** Called from TrainerDashboardController after FXML is loaded */
@@ -164,30 +168,44 @@ public class TrainerAttendanceController {
     @FXML
     private void onSaveClicked() {
         if (!awardMode) {
-            return; // in view mode do nothing
+            return; // view-only mode
         }
 
-        int awarded = 0;
+        int newlyAwarded = 0;
+        int alreadyAwarded = 0;
 
         for (AttendanceRow row : attendanceTable.getItems()) {
             if (row.isAttended()) {
-                // BookingService will:
-                //  - mark booking as ATTENDED
-                //  - award XP only if it wasn't attended before
+                // BookingService:
+                //  - si estaba CONFIRMED -> lo pasa a ATTENDED y da XP => true
+                //  - si ya estaba ATTENDED -> no hace nada => false
                 boolean ok = bookingService.markAttended(row.getBookingId());
                 if (ok) {
-                    awarded++;
+                    newlyAwarded++;
+                } else {
+                    alreadyAwarded++;
                 }
             }
         }
 
-        if (awarded == 0) {
-            messageLabel.setText("No attendees selected or all already marked as attended.");
+        if (newlyAwarded == 0 && alreadyAwarded == 0) {
+            messageLabel.setText("No attendees selected.");
+        } else if (newlyAwarded > 0 && alreadyAwarded == 0) {
+            messageLabel.setText(
+                    "Attendance saved and points awarded to " + newlyAwarded + " member(s)."
+            );
+        } else if (newlyAwarded == 0 && alreadyAwarded > 0) {
+            messageLabel.setText(
+                    "Attendance and points were already saved for the selected member(s)."
+            );
         } else {
-            messageLabel.setText("Saved attendance and awarded points to " + awarded + " member(s).");
+            messageLabel.setText(
+                    "Attendance saved. " + newlyAwarded + " new award(s), "
+                            + alreadyAwarded + " were already saved."
+            );
         }
 
-        // Refresh table so statuses/checkboxes match DB
+        // Reload table from DB so status + ticks match reality
         loadBookings();
     }
 
@@ -205,6 +223,7 @@ public class TrainerAttendanceController {
         private final StringProperty memberName;
         private final StringProperty status;
         private final BooleanProperty attended;
+        private final boolean initiallyAttended;
 
         public AttendanceRow(int bookingId, int userId,
                              String memberName, String status, boolean attended) {
@@ -213,6 +232,7 @@ public class TrainerAttendanceController {
             this.memberName = new SimpleStringProperty(memberName);
             this.status = new SimpleStringProperty(status);
             this.attended = new SimpleBooleanProperty(attended);
+            this.initiallyAttended = attended;
         }
 
         public int getBookingId() { return bookingId; }
@@ -222,5 +242,6 @@ public class TrainerAttendanceController {
         public StringProperty statusProperty() { return status; }
         public BooleanProperty attendedProperty() { return attended; }
         public boolean isAttended() { return attended.get(); }
+        public boolean isInitiallyAttended() { return initiallyAttended; }
     }
 }

@@ -29,11 +29,11 @@ public class AppConfig {
         bookingRepository = new SqliteBookingRepository(databaseManager);
         progressRepository = new SqliteProgressRepository(databaseManager);
 
-        // 3) Create services using the repositories
+        // 3) Create services using the repositories (ORDER MATTERS)
         authService = new AuthServiceImpl(userRepository);
         classService = new ClassServiceImpl(classRepository);
-        bookingService = new BookingServiceImpl(bookingRepository, classRepository, progressService);
         progressService = new ProgressServiceImpl(progressRepository);
+        bookingService = new BookingServiceImpl(bookingRepository, classRepository, progressService);
 
         DemoDataSeeder.seed();
 
