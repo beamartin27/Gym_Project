@@ -9,7 +9,7 @@ import java.time.LocalTime;
 
 public class ServiceTestMain {
     public static void main(String[] args) {
-        SqliteDatabaseManager.initializeDatabase();
+        AppConfig.init();
 
         System.out.println("\n=== COMPLETE SERVICE LAYER TEST ===\n");
 

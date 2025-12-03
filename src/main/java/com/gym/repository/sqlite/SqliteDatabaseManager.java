@@ -1,11 +1,14 @@
 package com.gym.repository.sqlite;
 
+import com.gym.repository.DatabaseManager;
+
 import java.sql.*;
 
-public class SqliteDatabaseManager {
+public class SqliteDatabaseManager implements DatabaseManager {
     private static final String DB_URL = "jdbc:sqlite:gym_database.db";
 
-    public static Connection getConnection() {
+    @Override
+    public Connection getConnection() {
         try {
             Connection conn = DriverManager.getConnection(DB_URL);
             return conn;
@@ -15,7 +18,8 @@ public class SqliteDatabaseManager {
         }
     }
 
-    public static void initializeDatabase() {
+    @Override
+    public void initializeDatabase() {
         System.out.println("Initializing database...\n");
         createUsersTable();
         createClassesTable();
@@ -25,7 +29,7 @@ public class SqliteDatabaseManager {
         System.out.println("\nAll tables have been created");
     }
 
-    private static void createUsersTable() {
+    private void createUsersTable() {
         String sql = """
             CREATE TABLE IF NOT EXISTS users (
                 user_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -39,7 +43,7 @@ public class SqliteDatabaseManager {
         executeUpdate(sql, "users");
     }
 
-    private static void createClassesTable() {
+    private void createClassesTable() {
         String sql = """
             CREATE TABLE IF NOT EXISTS classes (
                 class_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -55,7 +59,7 @@ public class SqliteDatabaseManager {
         executeUpdate(sql, "classes");
     }
 
-    private static void createClassScheduleTable() {
+    private void createClassScheduleTable() {
         String sql = """
             CREATE TABLE IF NOT EXISTS class_schedule (
                 schedule_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -70,7 +74,7 @@ public class SqliteDatabaseManager {
         executeUpdate(sql, "class_schedule");
     }
 
-    private static void createBookingsTable() {
+    private void createBookingsTable() {
         String sql = """
             CREATE TABLE IF NOT EXISTS bookings (
                 booking_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -85,7 +89,7 @@ public class SqliteDatabaseManager {
         executeUpdate(sql, "bookings");
     }
 
-    private static void createFitnessProgressTable() {
+    private void createFitnessProgressTable() {
         String sql = """
         CREATE TABLE IF NOT EXISTS fitness_progress (
             progress_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -100,7 +104,7 @@ public class SqliteDatabaseManager {
         executeUpdate(sql, "fitness_progress");
     }
 
-    private static void executeUpdate(String sql, String tableName) {
+    private void executeUpdate(String sql, String tableName) {
         try (Connection conn = getConnection();
              Statement stmt = conn.createStatement()) {
             stmt.execute(sql);

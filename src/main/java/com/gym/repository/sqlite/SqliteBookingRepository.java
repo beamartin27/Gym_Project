@@ -2,6 +2,7 @@ package com.gym.repository.sqlite;
 
 import com.gym.domain.Booking;
 import com.gym.repository.BookingRepository;
+import com.gym.repository.DatabaseManager;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -11,13 +12,19 @@ import java.util.List;
 
 public class SqliteBookingRepository implements BookingRepository {
 
+    private final DatabaseManager dbManager;
+
+    public SqliteBookingRepository(DatabaseManager dbManager) {
+        this.dbManager = dbManager;
+    }
+
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Override
     public boolean save(Booking booking) {
         String sql = "INSERT INTO bookings (user_id, schedule_id, booking_date, status) VALUES (?, ?, ?, ?)";
 
-        try (Connection conn = SqliteDatabaseManager.getConnection();
+        try (Connection conn = dbManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, booking.getUserId());
@@ -48,7 +55,7 @@ public class SqliteBookingRepository implements BookingRepository {
     public Booking findById(int bookingId) {
         String sql = "SELECT * FROM bookings WHERE booking_id = ?";
 
-        try (Connection conn = SqliteDatabaseManager.getConnection();
+        try (Connection conn = dbManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, bookingId);
@@ -69,7 +76,7 @@ public class SqliteBookingRepository implements BookingRepository {
         List<Booking> bookings = new ArrayList<>();
         String sql = "SELECT * FROM bookings WHERE user_id = ?";
 
-        try (Connection conn = SqliteDatabaseManager.getConnection();
+        try (Connection conn = dbManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, userId);
@@ -90,7 +97,7 @@ public class SqliteBookingRepository implements BookingRepository {
         List<Booking> bookings = new ArrayList<>();
         String sql = "SELECT * FROM bookings WHERE schedule_id = ?";
 
-        try (Connection conn = SqliteDatabaseManager.getConnection();
+        try (Connection conn = dbManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, scheduleId);
@@ -111,7 +118,7 @@ public class SqliteBookingRepository implements BookingRepository {
         List<Booking> bookings = new ArrayList<>();
         String sql = "SELECT * FROM bookings";
 
-        try (Connection conn = SqliteDatabaseManager.getConnection();
+        try (Connection conn = dbManager.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
@@ -129,7 +136,7 @@ public class SqliteBookingRepository implements BookingRepository {
     public boolean update(Booking booking) {
         String sql = "UPDATE bookings SET status = ? WHERE booking_id = ?";
 
-        try (Connection conn = SqliteDatabaseManager.getConnection();
+        try (Connection conn = dbManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, booking.getStatus());
@@ -151,7 +158,7 @@ public class SqliteBookingRepository implements BookingRepository {
     public boolean delete(int bookingId) {
         String sql = "DELETE FROM bookings WHERE booking_id = ?";
 
-        try (Connection conn = SqliteDatabaseManager.getConnection();
+        try (Connection conn = dbManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, bookingId);

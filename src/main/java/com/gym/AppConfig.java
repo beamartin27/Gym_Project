@@ -6,6 +6,8 @@ import com.gym.service.*;
 
 public class AppConfig {
 
+    private static DatabaseManager databaseManager;
+
     private static UserRepository userRepository;
     private static ClassRepository classRepository;
     private static BookingRepository bookingRepository;
@@ -17,13 +19,17 @@ public class AppConfig {
     private static ProgressService progressService;
 
     public static void init() {
-        // REPOSITORIES
-        userRepository = new SqliteUserRepository();
-        classRepository = new SqliteClassRepository();
-        bookingRepository = new SqliteBookingRepository();
-        progressRepository = new SqliteProgressRepository();
+        // 1) Create DB manager and initialize DB
+        databaseManager = new SqliteDatabaseManager();
+        databaseManager.initializeDatabase();
 
-        // SERVICES
+        // 2) Create repositories with that DB manager
+        userRepository = new SqliteUserRepository(databaseManager);
+        classRepository = new SqliteClassRepository(databaseManager);
+        bookingRepository = new SqliteBookingRepository(databaseManager);
+        progressRepository = new SqliteProgressRepository(databaseManager);
+
+        // 3) Create services using the repositories
         authService = new AuthServiceImpl(userRepository);
         classService = new ClassServiceImpl(classRepository);
         bookingService = new BookingServiceImpl(bookingRepository, classRepository);
@@ -31,6 +37,10 @@ public class AppConfig {
 
         DemoDataSeeder.seed();
 
+    }
+
+    public static DatabaseManager getDatabaseManager() {
+        return databaseManager;
     }
 
     public static AuthService getAuthService() { return authService; }

@@ -3,6 +3,7 @@ package com.gym.repository.sqlite;
 import com.gym.domain.GymClass;
 import com.gym.domain.ClassSchedule;
 import com.gym.repository.ClassRepository;
+import com.gym.repository.DatabaseManager;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -11,13 +12,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SqliteClassRepository implements ClassRepository {
+    private final DatabaseManager dbManager;
+
+    public SqliteClassRepository(DatabaseManager dbManager) {
+        this.dbManager = dbManager;
+    }
 
     //Gym Class
     @Override
     public boolean saveClass(GymClass gymClass) {
         String sql = "INSERT INTO classes (class_name, instructor_name, description, capacity, duration_minutes, class_type) VALUES (?, ?, ?, ?, ?, ?)";
 
-        try (Connection conn = SqliteDatabaseManager.getConnection();
+        try (Connection conn = dbManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, gymClass.getClassName());
@@ -50,7 +56,7 @@ public class SqliteClassRepository implements ClassRepository {
     public GymClass findClassById(int classId) {
         String sql = "SELECT * FROM classes WHERE class_id = ?";
 
-        try (Connection conn = SqliteDatabaseManager.getConnection();
+        try (Connection conn = dbManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, classId);
@@ -61,7 +67,7 @@ public class SqliteClassRepository implements ClassRepository {
             }
 
         } catch (SQLException e) {
-            System.err.println("❌ Error finding class: " + e.getMessage());
+            System.err.println("Error finding class: " + e.getMessage());
         }
         return null;
     }
@@ -71,7 +77,7 @@ public class SqliteClassRepository implements ClassRepository {
         List<GymClass> classes = new ArrayList<>();
         String sql = "SELECT * FROM classes";
 
-        try (Connection conn = SqliteDatabaseManager.getConnection();
+        try (Connection conn = dbManager.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
@@ -89,7 +95,7 @@ public class SqliteClassRepository implements ClassRepository {
     public boolean updateClass(GymClass gymClass) {
         String sql = "UPDATE classes SET class_name = ?, instructor_name = ?, description = ?, capacity = ?, duration_minutes = ?, class_type = ? WHERE class_id = ?";
 
-        try (Connection conn = SqliteDatabaseManager.getConnection();
+        try (Connection conn = dbManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, gymClass.getClassName());
@@ -116,7 +122,7 @@ public class SqliteClassRepository implements ClassRepository {
     public boolean deleteClass(int classId) {
         String sql = "DELETE FROM classes WHERE class_id = ?";
 
-        try (Connection conn = SqliteDatabaseManager.getConnection();
+        try (Connection conn = dbManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, classId);
@@ -138,7 +144,7 @@ public class SqliteClassRepository implements ClassRepository {
     public boolean saveSchedule(ClassSchedule schedule) {
         String sql = "INSERT INTO class_schedule (class_id, scheduled_date, start_time, end_time, available_spots) VALUES (?, ?, ?, ?, ?)";
 
-        try (Connection conn = SqliteDatabaseManager.getConnection();
+        try (Connection conn = dbManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, schedule.getClassId());
@@ -170,7 +176,7 @@ public class SqliteClassRepository implements ClassRepository {
     public ClassSchedule findScheduleById(int scheduleId) {
         String sql = "SELECT * FROM class_schedule WHERE schedule_id = ?";
 
-        try (Connection conn = SqliteDatabaseManager.getConnection();
+        try (Connection conn = dbManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, scheduleId);
@@ -191,7 +197,7 @@ public class SqliteClassRepository implements ClassRepository {
         List<ClassSchedule> schedules = new ArrayList<>();
         String sql = "SELECT * FROM class_schedule WHERE class_id = ?";
 
-        try (Connection conn = SqliteDatabaseManager.getConnection();
+        try (Connection conn = dbManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, classId);
@@ -212,7 +218,7 @@ public class SqliteClassRepository implements ClassRepository {
         List<ClassSchedule> schedules = new ArrayList<>();
         String sql = "SELECT * FROM class_schedule";
 
-        try (Connection conn = SqliteDatabaseManager.getConnection();
+        try (Connection conn = dbManager.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
@@ -229,7 +235,7 @@ public class SqliteClassRepository implements ClassRepository {
     public boolean updateSchedule(ClassSchedule schedule) {
         String sql = "UPDATE class_schedule SET scheduled_date = ?, start_time = ?, end_time = ?, available_spots = ? WHERE schedule_id = ?";
 
-        try (Connection conn = SqliteDatabaseManager.getConnection();
+        try (Connection conn = dbManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, schedule.getScheduledDate().toString());
@@ -254,7 +260,7 @@ public class SqliteClassRepository implements ClassRepository {
     public boolean deleteSchedule(int scheduleId) {
         String sql = "DELETE FROM class_schedule WHERE schedule_id = ?";
 
-        try (Connection conn = SqliteDatabaseManager.getConnection();
+        try (Connection conn = dbManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, scheduleId);

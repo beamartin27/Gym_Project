@@ -5,7 +5,7 @@ import com.gym.domain.ClassSchedule;
 import com.gym.domain.GymClass;
 import com.gym.service.BookingService;
 import com.gym.service.ClassService;
-import com.gym.ui.utils.SessionManager;
+import com.gym.utils.SessionManager;
 import com.gym.utils.SceneManager;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -13,7 +13,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.HashMap;
