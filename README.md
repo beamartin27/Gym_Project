@@ -16,14 +16,14 @@ A JavaFX + SQLite desktop application for managing gym group classes, bookings a
 - Supported integration between UI and persistence logic (controller → service → repository) to ensure reliable data operations.
 
 Evidence (optional):
-- PRs: <link(s) here>
-- Commits: <link to commits page filtered by author>
+- PRs: <[link to pr link filtered by author](https://github.com/adriFCM/Gym_Project/pulls?q=author%3Abeamartin27)>
+- Commits: <[link to commits page filtered by author](https://github.com/adriFCM/Gym_Project/commits/main/?author=beamartin27)>
 
 ## Screenshots
-![Login](docs/screenshots/login.png)
-![Admin dashboard](docs/screenshots/admin_dashboard.png)
-![Member booking](docs/screenshots/member_booking.png)
-![Trainer attendance](docs/screenshots/trainer_attendance.png)
+![Member dashboard](.idea/Screenshots/member_dashboard.png)
+![Admin dashboard](.idea/Screenshots/admin_dashboard.png)
+![Progress dashboard](.idea/Screenshots/progress_dashboard.png)
+![Classes dashboard](.idea/Screenshots/classes_dashboard.png)
 
 ---
 
