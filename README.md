@@ -1,10 +1,29 @@
 # GymClass Booking System
 
+> Portfolio fork of a team project. Original repository: <[LINK TO ORIGINAL](https://github.com/adriFCM/Gym_Project)>
+> My contributions are highlighted below.
+
 A JavaFX + SQLite desktop application for managing gym group classes, bookings and member progress.
 
 - **Admins** manage users, classes and schedules.
 - **Trainers** mark attendance and award XP.
 - **Members** book classes and track their fitness progress.
+
+## My contributions (Beatriz Martín)
+- Designed and implemented core **interfaces** and improved the **repository/service layer structure** to support clean separation of concerns.
+- Refactored and organized the codebase to keep a consistent **OOP design** across domain, repository and service modules.
+- Implemented and maintained multiple **JavaFX controllers** and UI flows across **Admin / Trainer / Member** views (navigation, state handling and visuals).
+- Supported integration between UI and persistence logic (controller → service → repository) to ensure reliable data operations.
+
+Evidence (optional):
+- PRs: <link(s) here>
+- Commits: <link to commits page filtered by author>
+
+## Screenshots
+![Login](docs/screenshots/login.png)
+![Admin dashboard](docs/screenshots/admin_dashboard.png)
+![Member booking](docs/screenshots/member_booking.png)
+![Trainer attendance](docs/screenshots/trainer_attendance.png)
 
 ---
 
